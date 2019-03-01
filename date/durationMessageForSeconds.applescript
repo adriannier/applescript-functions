@@ -4,7 +4,6 @@ The specified number of seconds is converted to a string like "30 minutes" or "1
 
 durationMessageForSeconds(3)
 
--- ### IMPLEMENTATION ###
 on durationMessageForSeconds(theSeconds)
 	
 	-- Check input
