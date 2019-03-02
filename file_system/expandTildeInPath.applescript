@@ -13,7 +13,7 @@ on expandTildeInPath(aPath)
 		
 	else
 		
-		-- Get the path to the userÕs home folder
+		-- Get the path to the userâ€™s home folder
 		set homeFolderPath to POSIX path of (path to home folder)
 		
 		if homeFolderPath ends with "/" then

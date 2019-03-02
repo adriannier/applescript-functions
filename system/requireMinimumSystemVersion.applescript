@@ -62,7 +62,7 @@ on requireMinimumSystemVersion(minimumSystemVersion)
 	
 	activate
 	
-	if (majorVersion of currentVersion) ³ 10 and (minorVersion of currentVersion) ³ 4 then
+	if (majorVersion of currentVersion) â‰¥ 10 and (minorVersion of currentVersion) â‰¥ 4 then
 		display alert dialogTitle message dialogMessage buttons {"OK"} default button "OK" as warning
 	else
 		display dialog dialogTitle & return & return & dialogMessage buttons {"OK"} default button "OK" with icon 2

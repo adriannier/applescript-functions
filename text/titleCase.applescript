@@ -17,23 +17,23 @@ on convertTextToTitleCase(aText)
 		property pLowercaseCharacters : {}
 		property pUppercaseCharacters : {}
 		
-		property pWordsToKeepLowercase : {"a", "an", "and", "as", "at"} & Â
-			{"but", "by"} & Â
-			{"en"} & Â
-			{"featuring", "feat.", "feat", "for"} & Â
-			{"if", "in"} & Â
-			{"of", "on", "or"} & Â
-			{"the", "to"} & Â
+		property pWordsToKeepLowercase : {"a", "an", "and", "as", "at"} & Â¬
+			{"but", "by"} & Â¬
+			{"en"} & Â¬
+			{"featuring", "feat.", "feat", "for"} & Â¬
+			{"if", "in"} & Â¬
+			{"of", "on", "or"} & Â¬
+			{"the", "to"} & Â¬
 			{"v", "v.", "via", "vs", "vs."}
 		
 		property pSpecialPhrases : {"iPod touch", "Mac mini", "(featuring", "[featuring", "(feat.", "[feat.", "(feat", "[feat."}
 		
 		property pSpecialWords : {"iBook", "iDVD", "iLife", "iMac", "iMovie", "iPhone", "iPhoto", "iPod", "iWeb", "iWork", "eMac", "eMail", "AT&T", "Q&A"}
 		
-		property pWordAndPhraseAdditions : {"'s", "Õs", "s'", "sÕ", "s", "es"}
+		property pWordAndPhraseAdditions : {"'s", "â€™s", "s'", "sâ€™", "s", "es"}
 		
 		-- Define characters that require the next character to be upper case
-		property pCharsCausingUppercaseForNextChar : {"\"", "'", "Ò", "Ô", "(", "{", "[", "_"}
+		property pCharsCausingUppercaseForNextChar : {"\"", "'", "â€œ", "â€˜", "(", "{", "[", "_"}
 		
 		-- Define characters that are the last character of one word and require the next word to be upper case
 		property pLastCharsCausingUppercaseForNextWord : {":", ".", "?", "!"}
@@ -192,7 +192,7 @@ on convertTextToTitleCase(aText)
 					
 					set text item delimiters to prvDlmt
 					
-					if phraseNumber ­ 0 then
+					if phraseNumber â‰  0 then
 						set end of restoredItems to (item phraseNumber of pSpecialPhrases & theRemainder)
 					else
 						set end of restoredItems to (item i of tempList)

@@ -29,7 +29,7 @@ on relativePosixPath(origin, destination)
 	end repeat
 	
 	if i > (count of destinationPathComponents) then
-		-- Make sure weÕre not out of bounds
+		-- Make sure weâ€™re not out of bounds
 		set i to count of destinationPathComponents
 	end if
 	

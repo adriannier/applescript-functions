@@ -21,7 +21,7 @@ on uniqueFileHFSPath(parentFolderPath, fileName, suffix)
 	-- Expand tilde
 	if parentFolderPath starts with "~" then
 		
-		-- Get the path to the userÕs home folder
+		-- Get the path to the userâ€™s home folder
 		set userPath to POSIX path of (path to home folder)
 		
 		-- Remove trailing slash

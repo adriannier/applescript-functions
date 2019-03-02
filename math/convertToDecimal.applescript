@@ -23,7 +23,7 @@ on convertToDecimal(aValue, baseOfValue)
 		
 		set charNumber to ASCII number char
 		
-		if charNumber ³ 65 and charNumber ² 90 then
+		if charNumber â‰¥ 65 and charNumber â‰¤ 90 then
 			set v to charNumber - 55
 		else
 			set v to char as integer

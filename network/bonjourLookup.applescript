@@ -117,7 +117,7 @@ on bonjourLookup(aServiceType, aName, aScanTime)
 				
 				repeat
 					
-					if start_WhiteSpaceEnd is not false and i ² (start_WhiteSpaceEnd + 1) then exit repeat
+					if start_WhiteSpaceEnd is not false and i â‰¤ (start_WhiteSpaceEnd + 1) then exit repeat
 					
 					if (ASCII number (character i of aText)) > 32 and (ASCII number (character i of aText)) is not 202 then
 						exit repeat
