@@ -6,7 +6,7 @@ hfsPathForParent(path to me as text)
 
 on hfsPathForParent(anyPath)
 	
-	-- Convert to text
+	-- Convert path to text
 	set anyPath to anyPath as text
 	
 	-- Remove quotes
