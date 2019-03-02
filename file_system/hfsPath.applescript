@@ -6,7 +6,7 @@ hfsPath("~/")
 
 on hfsPath(anyPath)
 	
-	-- Convert to text
+	-- Convert path to text
 	set anyPath to anyPath as text
 	
 	-- Remove quotes
