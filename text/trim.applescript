@@ -78,18 +78,6 @@ on trim(aText)
 			
 		end if
 		
-		log "-> " & aText
-		log start_WhiteSpaceEnd
-		log end_WhiteSpaceStart
-		
-		(*
-		if p1 = length of aText then
-			return ""
-		else
-			return text p1 thru p2 of aText
-		end if
-		
-		*)
 	on error eMsg number eNum
 		
 		log "trim: " & eMsg & " (" & (eNum as text) & ")"
