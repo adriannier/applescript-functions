@@ -1,5 +1,5 @@
 (*
-Returns the HFS path of the parent for the specified path
+	Returns the HFS path of the parent for the specified path
 *)
 
 hfsPathForParent(path to me as text)

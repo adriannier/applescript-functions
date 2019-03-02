@@ -1,5 +1,5 @@
 (*
-Pads a text to the desired width by using the specified prefix. Should the text contain lines, each line will be padded separately.
+	Pads a text to the desired width by using the specified prefix. Should the text contain lines, each line will be padded separately.
 *)
 
 padWithPrefix("Hello

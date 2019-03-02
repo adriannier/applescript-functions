@@ -1,5 +1,5 @@
 (*
-Returns the textual representation of a variable.
+	Returns the textual representation of a variable.
 *)
 
 log varDump({1, 2, 3})

@@ -1,6 +1,6 @@
 (*
-Returns the current system version as a record in the form of:
-{major:10, minor:14, revision:2, versionString:"10.14.2"}
+	Returns the current system version as a record in the form of:
+	{major:10, minor:14, revision:2, versionString:"10.14.2"}
 *)
 
 systemVersion()

@@ -1,5 +1,5 @@
 (*
-The specified number of seconds is converted to a string like "30 minutes" or "1 day"
+	The specified number of seconds is converted to a string like "30 minutes" or "1 day"
 *)
 
 durationMessageForSeconds(3)

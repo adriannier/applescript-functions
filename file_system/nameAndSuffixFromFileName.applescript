@@ -1,5 +1,5 @@
 (*
-Takes a file name, removes the suffix and returns both in a list.
+	Takes a file name, removes the suffix and returns both in a list.
 *)
 
 log baseNameAndSuffixFromFileName("Librarian.nib")

@@ -1,5 +1,5 @@
 (*
-Converts a decimal number to the specified base.
+	Converts a decimal number to the specified base.
 *)
 
 log convertFromDecimal(127, 2) -- Binary

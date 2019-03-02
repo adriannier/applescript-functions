@@ -1,5 +1,5 @@
 (*
-Converts a text to title case.
+	Converts a text to title case.
 *)
 
 log convertTextToTitleCase("In episode iv: MAC MINI finally speed bumped.")

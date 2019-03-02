@@ -1,5 +1,5 @@
 (*
-Returns the week number of the specified date.
+	Returns the week number of the specified date.
 *)
 
 weekNumberForDate(current date)

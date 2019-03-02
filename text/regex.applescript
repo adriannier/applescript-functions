@@ -1,5 +1,5 @@
 (*
-Returns regular expression matches for the specified pattern and string.
+	Returns regular expression matches for the specified pattern and string.
 *)
 
 set thePattern to "/Invoice.*(\\d\\d-\\d\\d\\d\\d)/i"

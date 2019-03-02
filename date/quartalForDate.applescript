@@ -1,5 +1,5 @@
 (*
-Return an integer respresenting the quartal number for the given date.
+	Returns an integer respresenting the quartal number for the given date.
 *)
 
 quartalForDate(current date)

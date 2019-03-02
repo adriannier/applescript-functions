@@ -1,5 +1,5 @@
 (*
-Counts the occurrences of a text in another.
+	Counts the occurrences of a text in another.
 *)
 
 patternCount(",", "abc, abc, abc, abc")

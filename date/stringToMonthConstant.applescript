@@ -1,5 +1,5 @@
 (*
-Returns the AppleScript month constant for a text like "Jan", "January", "Oct", or "October."
+	Returns the AppleScript month constant for a text like "Jan", "January", "Oct", or "October."
 *)
 
 stringToMonthConstant("Dec")

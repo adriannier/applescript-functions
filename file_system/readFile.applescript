@@ -1,5 +1,5 @@
 (*
-Reads contents of a file at the specified path. Second parameter is content type [e.g. text, record, Çclass utf8È, etc.]
+	Reads contents of a file at the specified path. Second parameter is content type [e.g. text, record, Çclass utf8È, etc.]
 *)
 
 log readFile("/etc/hosts", false)

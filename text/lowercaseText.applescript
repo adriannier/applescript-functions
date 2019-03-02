@@ -1,5 +1,5 @@
 (*
-Converts text to lower case.
+	Converts text to lower case.
 *)
 
 lowercaseText("Hello World!")

@@ -1,5 +1,5 @@
 (*
-Generates a unique path for a file in the current user's temporary items folder. Takes a single argument that can be set to the name of a subfolder or false to create no subfolder.
+	Generates a unique path for a file in the current user's temporary items folder. Takes a single argument that can be set to the name of a subfolder or false to create no subfolder.
 *)
 	
 temporaryPathWithFolderName("Test")

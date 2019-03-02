@@ -1,5 +1,5 @@
 (*
-Checks if a network port is open.
+	Checks if a network port is open.
 *)
 
 log checkPort(80, "www.apple.com", 3)

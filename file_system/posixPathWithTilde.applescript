@@ -1,5 +1,5 @@
 (*
-Returns a tilde-based POSIX path if the specified path is part of the current user’s home folder.
+	Returns a tilde-based POSIX path if the specified path is part of the current user’s home folder.
 *)
 
 posixPathWithTilde(path to me)

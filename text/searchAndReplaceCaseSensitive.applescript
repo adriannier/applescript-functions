@@ -1,12 +1,10 @@
 (*
-
-Search for a pattern and replace it in a string. Pattern and replacement can be a list of multiple values.
-
+	Search for a pattern and replace it in a string. Pattern and replacement can be a list of multiple values.
 *)
 
-searchAndReplace("Wello world?", {"W", "w", "?"}, {"H", "W", "!"})
+searchAndReplaceCS("Wello world?", {"W", "w", "?"}, {"H", "W", "!"})
 
-on searchAndReplace(aText, aPattern, aReplacement)
+on searchAndReplaceCS(aText, aPattern, aReplacement)
 	
 	if (class of aPattern) is list and (class of aReplacement) is list then
 		
@@ -19,7 +17,7 @@ on searchAndReplace(aText, aPattern, aReplacement)
 		
 		-- Process matching list of patterns and replacements
 		repeat with i from 1 to count of aPattern
-			set aText to snr(aText, item i of aPattern, item i of aReplacement)
+			set aText to searchAndReplaceCS(aText, item i of aPattern, item i of aReplacement)
 		end repeat
 		
 		return aText
@@ -29,7 +27,7 @@ on searchAndReplace(aText, aPattern, aReplacement)
 		-- Replace multiple patterns with the same text
 		
 		repeat with i from 1 to count of aPattern
-			set aText to snr(aText, item i of aPattern, aReplacement)
+			set aText to searchAndReplaceCS(aText, item i of aPattern, aReplacement)
 		end repeat
 		
 		return aText
@@ -64,4 +62,4 @@ on searchAndReplace(aText, aPattern, aReplacement)
 		
 	end if
 	
-end searchAndReplace
+end searchAndReplaceCS

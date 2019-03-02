@@ -1,16 +1,5 @@
-(* ### DESCRIPTION ###
-Pads a text to the desired width by using the specified suffix. Should the text contain multiple paragraphs, each paragraph will be padded separately.
-
-# Required parameters
-Parameter 1 (text)
-:-- The text to be padded.
-
-Parameter 2 (integer)
-:-- The new width of the text.
-
-Parameter 3 (text)
-:-- The suffix to use as padding.
-
+(*
+	Pads a text to the desired width by using the specified suffix. Should the text contain multiple paragraphs, each paragraph will be padded separately.
 *)
 
 log padWithSuffix("@", 7, "-")

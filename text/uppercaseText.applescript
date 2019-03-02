@@ -1,5 +1,5 @@
 (*
-Converts text to upper case.
+	Converts text to upper case.
 *)
 
 uppercaseText("Hello World!")

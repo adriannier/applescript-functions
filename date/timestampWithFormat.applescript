@@ -1,4 +1,25 @@
+(*
+	Returns the specified date and time as a string suitable for either log files or file names.
+*)
+
+log timestampWithFormat(current date, 1)
+
+log timestampWithFormat(current date, 2)
+
+log timestampWithFormat(current date, 3)
+
 on timestampWithFormat(aDate, aFormat)
+
+	(*
+		Returns the specified date and time as a string suitable for either log files or file names.
+		
+		Formats:
+		
+		1: 2000-01-28 23:15:59
+		2: 2000-01-28_23-15-59
+		3: Jan 28 23:15:59
+		
+	*)
 	
 	if aDate is false then set aDate to current date
 	if aFormat is false then set aFormat to 1

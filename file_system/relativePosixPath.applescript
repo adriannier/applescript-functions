@@ -1,5 +1,5 @@
 (*
-Examines two posix paths and returns the relative path that leads from the first path to the second.
+	Examines two posix paths and returns the relative path that leads from the first path to the second.
 *)
 
 relativePosixPath("/Library/Desktop Pictures/", "/Library/Application Support/")

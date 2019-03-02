@@ -1,5 +1,5 @@
 (*
-Converts any file reference to a HFS-style path string.
+	Converts any file reference to a HFS-style path string.
 *)
 
 hfsPath("~/")

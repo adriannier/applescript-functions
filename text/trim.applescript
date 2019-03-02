@@ -1,5 +1,5 @@
 (*
-Removes surrounding white space from a text.
+	Removes surrounding white space from a text.
 *)
 
 log trim("Hello World!")

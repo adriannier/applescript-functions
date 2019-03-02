@@ -1,5 +1,5 @@
 (*
-Convert a number in a different base to decimal.
+	Convert a number in a different base to decimal.
 *)
 
 log convertToDecimal("1111111", 2) -- Binary
