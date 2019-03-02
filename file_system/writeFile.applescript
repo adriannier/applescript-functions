@@ -32,7 +32,7 @@ on writeFile(content, filePath, options)
 	
 	try
 		
-		-- Convert to text
+		-- Convert path to text
 		set filePath to filePath as text
 		
 		-- Remove quotes
