@@ -2,20 +2,20 @@
 	Takes a file name, removes the suffix and returns both in a list.
 *)
 
-log baseNameAndSuffixFromFileName("Librarian.nib")
+log nameAndSuffixFromFileName("Librarian.nib")
 
-log baseNameAndSuffixFromFileName(".DS_Store")
+log nameAndSuffixFromFileName(".DS_Store")
 
-log baseNameAndSuffixFromFileName("archive.tar.gz")
+log nameAndSuffixFromFileName("archive.tar.gz")
 
-on baseNameAndSuffixFromFileName(fileName)
+on nameAndSuffixFromFileName(fileName)
 	
 	(*
 		Takes a file name, removes the suffix and returns both in a list.
 	*)
 	
 	-- Initialize variables
-	set baseName to fileName
+	set theName to fileName
 	set suffix to ""
 	
 	if fileName contains "." then
@@ -25,7 +25,7 @@ on baseNameAndSuffixFromFileName(fileName)
 		set text item delimiters to "."
 		
 		-- Get rid of everything before the last dot
-		set baseName to (text items 1 thru -2 of fileName) as text
+		set theName to (text items 1 thru -2 of fileName) as text
 		
 		-- Last text item should be the suffix
 		set suffix to text item -1 of fileName
@@ -33,16 +33,16 @@ on baseNameAndSuffixFromFileName(fileName)
 		-- Restore delimiters
 		set text item delimiters to prvDlmt
 		
-		if suffix contains " " or baseName is "" or suffix is "" then
-		
+		if suffix contains " " or theName is "" or suffix is "" then
+			
 			-- No suffix
-			set baseName to fileName
+			set theName to fileName
 			set suffix to ""
 			
 		end if
 		
 	end if
 	
-	return {baseName, suffix}
-		
-end baseNameAndSuffixFromFileName
+	return {theName, suffix}
+	
+end nameAndSuffixFromFileName
