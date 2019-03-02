@@ -2,29 +2,48 @@
 	Counts the occurrences of a text in another.
 *)
 
-patternCount(",", "abc, abc, abc, abc")
+patternCount("abc", "abc, ABC, abc, abc", true)
 
-on patternCount(aPattern, aText)
+on patternCount(aPattern, aText, caseSensitive)
 	
-	if aText does not contain aPattern then
+	set theCount to 0
 	
-		return 0
+	if caseSensitive then
+		
+		considering case
+			
+			if aText contains aPattern then
+				
+				set prvDlmt to text item delimiters
+				
+				try
+					set text item delimiters to aPattern
+					set theCount to (count of text items of aText) - 1
+				end try
+				
+				set text item delimiters to prvDlmt
+				
+			end if
+			
+		end considering
 		
 	else
 		
-		set prvDlmt to text item delimiters
-		
-		try
-			set text item delimiters to aPattern
-			set aPatternCount to (count of text items of aText) - 1
-		on error
-			set aPatternCount to 0
-		end try
-		
-		set text item delimiters to prvDlmt
-		
-		return aPatternCount
+		if aText contains aPattern then
+			
+			set prvDlmt to text item delimiters
+			
+			try
+				set text item delimiters to aPattern
+				set theCount to (count of text items of aText) - 1
+			end try
+			
+			set text item delimiters to prvDlmt
+			
+		end if
 		
 	end if
+	
+	return theCount
 	
 end patternCount
