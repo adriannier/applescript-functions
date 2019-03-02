@@ -1,3 +1,3 @@
 # applescript-functions
 
-A collection of useful AppleScript functions to work with text, dates and other topics.  
+A collection of AppleScript functions to work with strings, dates, the file system and other topics.
