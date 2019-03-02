@@ -127,7 +127,7 @@ on pingNetworkAddress(anAddress, aTimeout)
 				-- Expand tilde
 				if filePath starts with "~" then
 					
-					-- Get the path to the userÕs home folder
+					-- Get the path to the userâ€™s home folder
 					set userPath to POSIX path of (path to home folder)
 					
 					-- Remove trailing slash
@@ -145,7 +145,7 @@ on pingNetworkAddress(anAddress, aTimeout)
 				
 				if contentClass is missing value or contentClass is in {false, 0, "", "utf8", "utf-8"} then
 					-- Set default content class
-					set contentClass to Çclass utf8È
+					set contentClass to Â«class utf8Â»
 				end if
 				
 				-- Check if the file exists
@@ -177,7 +177,7 @@ on pingNetworkAddress(anAddress, aTimeout)
 				
 			on error errorMessage number errorNumber
 				
-				set errorMessage to "readFile(\"" & filePath & "\", " & (contentClass as text) & "): " & Â
+				set errorMessage to "readFile(\"" & filePath & "\", " & (contentClass as text) & "): " & Â¬
 					errorMessage
 				error errorMessage number errorNumber
 				

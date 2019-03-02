@@ -24,7 +24,7 @@ on checkPort(aPort, anAddress, aTimeout)
 			
 			set sv to systemVersion()
 			
-			if major of sv ³ 10 and minor of sv ³ 9 then
+			if major of sv â‰¥ 10 and minor of sv â‰¥ 9 then
 				set quotedStrokeToolPath to quoted form of "/System/Library/CoreServices/Applications/Network Utility.app/Contents/Resources/stroke"
 			else
 				set quotedStrokeToolPath to quoted form of "/Applications/Utilities/Network Utility.app/Contents/Resources/stroke"
@@ -148,7 +148,7 @@ on checkPort(aPort, anAddress, aTimeout)
 				-- Expand tilde
 				if filePath starts with "~" then
 					
-					-- Get the path to the userÕs home folder
+					-- Get the path to the userâ€™s home folder
 					set userPath to POSIX path of (path to home folder)
 					
 					-- Remove trailing slash
@@ -166,7 +166,7 @@ on checkPort(aPort, anAddress, aTimeout)
 				
 				if contentClass is missing value or contentClass is in {false, 0, "", "utf8", "utf-8"} then
 					-- Set default content class
-					set contentClass to Çclass utf8È
+					set contentClass to Â«class utf8Â»
 				end if
 				
 				-- Check if the file exists
@@ -198,7 +198,7 @@ on checkPort(aPort, anAddress, aTimeout)
 				
 			on error errorMessage number errorNumber
 				
-				set errorMessage to "readFile(\"" & filePath & "\", " & (contentClass as text) & "): " & Â
+				set errorMessage to "readFile(\"" & filePath & "\", " & (contentClass as text) & "): " & Â¬
 					errorMessage
 				error errorMessage number errorNumber
 				
