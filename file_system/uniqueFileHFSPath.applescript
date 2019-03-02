@@ -10,7 +10,7 @@ on uniqueFileHFSPath(parentFolderPath, fileName, suffix)
 	Generates a unique path for a file with the specified name and suffix in a folder located at the specified path.
 *)
 	
-	-- Convert to text
+	-- Convert path to text
 	set parentFolderPath to parentFolderPath as text
 	
 	-- Remove quotes
