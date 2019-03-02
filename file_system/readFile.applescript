@@ -10,7 +10,7 @@ on readFile(filePath, contentClass)
 	
 	try
 		
-		-- Convert to text
+		-- Convert path to text
 		set filePath to filePath as text
 		
 		-- Remove quotes
