@@ -10,7 +10,7 @@ on uniqueFolderHFSPath(parentFolderPath, folderName)
 	Generates a unique path for a folder with the specified name in a folder located at the specified path.
 *)
 	
-	-- Convert to text
+	-- Convert path to text
 	set parentFolderPath to parentFolderPath as text
 	
 	-- Remove quotes
