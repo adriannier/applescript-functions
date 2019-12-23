@@ -22,11 +22,11 @@ newlineCharacter (text)
 *)
 
 
-writeFile("Hello World", "~/Desktop/Demo 1.txt", false)
+writeFile("Hello World", "~/Desktop/Demo 1.txt", {overrideType:Çclass utf8È})
 
 writeFile("Hello World", "~/Desktop/Demo 2.txt", {atomically:true})
 
-writeFile("Hello World " & random number from 1000 to 9999, "~/Desktop/Demo 3.log", {appendNewContent:true, appendWithNewline:true})
+writeFile("Hello World " & (random number from 1000 to 9999), "~/Desktop/Demo 3.log", {appendNewContent:true, appendWithNewline:true})
 
 on writeFile(content, filePath, options)
 	
@@ -43,7 +43,7 @@ on writeFile(content, filePath, options)
 		-- Expand tilde
 		if filePath starts with "~" then
 			
-			-- Get the path to the userâ€™s home folder
+			-- Get the path to the userÕs home folder
 			set userPath to POSIX path of (path to home folder)
 			
 			-- Remove trailing slash
