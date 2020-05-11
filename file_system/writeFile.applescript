@@ -1,27 +1,3 @@
-(*
-
-Writes content to a file. Takes three arguments. The path, the content and a record with options. Returns true, if the operation was successful, otherwise an error is raised.
-
-Options are:
-
-overrideType (class)
-- Class name for the data type to write the content as [e.g. text, list, etc.].
- 
-atomically (boolean) 
-- Write atomically. First writes data to temporary file, then replaces original file with temporary file. Default: false
-
-appendNewContent (boolean)
-- Append the content to the file. Default: false
-
-appendWithNewLine (boolean)
-- Appends the content with a new line character. Ignored if appendNewContent is set to false. Default: false
-
-newlineCharacter (text)
-- Used as newline character. Default: ASCII character 10
-
-*)
-
-
 writeFile("Hello World", "~/Desktop/Demo 1.txt", {overrideType:Çclass utf8È})
 
 writeFile("Hello World", "~/Desktop/Demo 2.txt", {atomically:true})
@@ -29,6 +5,29 @@ writeFile("Hello World", "~/Desktop/Demo 2.txt", {atomically:true})
 writeFile("Hello World " & (random number from 1000 to 9999), "~/Desktop/Demo 3.log", {appendNewContent:true, appendWithNewline:true})
 
 on writeFile(content, filePath, options)
+	
+	(*
+
+	Writes content to a file. Takes three arguments. The path, the content and a record with options. Returns true, if the operation was successful, otherwise an error is raised.
+
+	Options are:
+
+	overrideType (class)
+	- Class name for the data type to write the content as [e.g. text, list, etc.].
+ 
+	atomically (boolean) 
+	- Write atomically. First writes data to temporary file, then replaces original file with temporary file. Default: false
+
+	appendNewContent (boolean)
+	- Append the content to the file. Default: false
+
+	appendWithNewLine (boolean)
+	- Appends the content with a new line character. Ignored if appendNewContent is set to false. Default: false
+
+	newlineCharacter (text)
+	- Used as newline character. Default: ASCII character 10
+
+	*)
 	
 	try
 		
