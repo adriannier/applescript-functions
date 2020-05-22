@@ -18,6 +18,15 @@ log trim("H                      ")
 
 log trim("                      W")
 
+log trim("")
+log trim(" ")
+log trim("	")
+
+log trim("x ")
+log trim("x	")
+log trim(" x")
+log trim("	x")
+
 on trim(aText)
 	
 	(* Strips a text of its surrounding white space. *)
@@ -34,7 +43,8 @@ on trim(aText)
 		
 		repeat with i from 1 to count of characters in aText
 			
-			if (ASCII number (character i of aText)) > 32 and (ASCII number (character i of aText)) is not 202 then
+			set asc to ASCII number character i of aText
+			if asc > 32 and asc is not 202 then
 				exit repeat
 			else
 				set start_WhiteSpaceEnd to i
@@ -50,9 +60,11 @@ on trim(aText)
 		
 		repeat
 			
-			if start_WhiteSpaceEnd is not false and i â‰¤ (start_WhiteSpaceEnd + 1) then exit repeat
+			if start_WhiteSpaceEnd is not false and i ² (start_WhiteSpaceEnd + 1) then exit repeat
 			
-			if (ASCII number (character i of aText)) > 32 and (ASCII number (character i of aText)) is not 202 then
+			set asc to ASCII number character i of aText
+			
+			if asc > 32 and asc is not 202 then
 				exit repeat
 			else
 				set end_WhiteSpaceStart to i
@@ -68,7 +80,11 @@ on trim(aText)
 			return aText
 			
 		else if start_WhiteSpaceEnd is not false and end_WhiteSpaceStart is false then
-			return text (start_WhiteSpaceEnd + 1) thru -1 of aText
+			try
+				return text (start_WhiteSpaceEnd + 1) thru -1 of aText
+			on error
+				return ""
+			end try
 			
 		else if start_WhiteSpaceEnd is false and end_WhiteSpaceStart is not false then
 			return text 1 thru (end_WhiteSpaceStart - 1) of aText
