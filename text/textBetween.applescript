@@ -1,3 +1,82 @@
+log "Test 1"
+if textBetween("<tag>", "<", ">") is not "tag" then error "1"
+
+log "Test 2"
+if textBetween("<tag>", "<", -1) is not "tag" then error "2"
+
+log "Test 3"
+if textBetween("abcdefghi", "cde", -1) is not "fgh" then error "3"
+
+log "Test 4"
+if textBetween("abcdefghi", "cde", false) is not "fghi" then error "4"
+
+log "Test 5"
+if textBetween("abcdefghi", false, "def") is not "abc" then error "5"
+
+log "Test 6"
+if textBetween("abcdefghi", false, false) is not "abcdefghi" then error "6"
+
+log "Test 7"
+if textBetween("This is a Hello World example", "s a ", " ex") is not "Hello World" then error "7"
+
+log "Test 8"
+try
+	log textBetween("", "", "")
+on error eMsg number eNum
+	if eMsg is not "textBetween: Empty start string specified" then error "8"
+end try
+
+log "Test 9"
+try
+	log textBetween("", "<", "")
+on error eMsg number eNum
+	if eMsg is not "textBetween: Empty end string specified" then error "9"
+end try
+
+log "Test 10"
+try
+	log textBetween("<", "<", ">")
+on error eMsg number eNum
+	if eMsg is not "textBetween: Input string too short" then error "10"
+end try
+
+log "Test 11"
+try
+	log textBetween("<<", "<", ">")
+on error eMsg number eNum
+	if eMsg is not "textBetween: End string not found" then error "11"
+end try
+
+log "Test 12"
+try
+	log textBetween("<>", "<", ">")
+on error eMsg number eNum
+	if eMsg is not "textBetween: End string not found" then error "12"
+end try
+
+log "Test 13"
+if textBetween("<a>", "<", ">") is not "a" then error "13"
+
+log "Test 14"
+try
+	log textBetween("<a<", "<", ">")
+on error eMsg number eNum
+	if eMsg is not "textBetween: End string not found" then error "14"
+end try
+
+log "Test 15"
+if textBetween("<a>", 1, 3) is not "a" then error "15"
+
+log "Test 16"
+try
+	log textBetween("<a", 1, 3)
+on error eMsg number eNum
+	if eMsg is not "textBetween: Invalid end offset specified. Out of bounds." then error "16"
+end try
+
+log "Test 17"
+if textBetween("Hello World", 2, 5) is not "ll" then error "17"
+
 on textBetween(str, a, b)
 	
 	(* Returns a substring between a start string and an end string *)
@@ -103,82 +182,3 @@ on textBetween(str, a, b)
 	end try
 	
 end textBetween
-
-log "Test 1"
-if textBetween("<tag>", "<", ">") is not "tag" then error "1"
-
-log "Test 2"
-if textBetween("<tag>", "<", -1) is not "tag" then error "2"
-
-log "Test 3"
-if textBetween("abcdefghi", "cde", -1) is not "fgh" then error "3"
-
-log "Test 4"
-if textBetween("abcdefghi", "cde", false) is not "fghi" then error "4"
-
-log "Test 5"
-if textBetween("abcdefghi", false, "def") is not "abc" then error "5"
-
-log "Test 6"
-if textBetween("abcdefghi", false, false) is not "abcdefghi" then error "6"
-
-log "Test 7"
-if textBetween("This is a Hello World example", "s a ", " ex") is not "Hello World" then error "7"
-
-log "Test 8"
-try
-	log textBetween("", "", "")
-on error eMsg number eNum
-	if eMsg is not "textBetween: Empty start string specified" then error "8"
-end try
-
-log "Test 9"
-try
-	log textBetween("", "<", "")
-on error eMsg number eNum
-	if eMsg is not "textBetween: Empty end string specified" then error "9"
-end try
-
-log "Test 10"
-try
-	log textBetween("<", "<", ">")
-on error eMsg number eNum
-	if eMsg is not "textBetween: Input string too short" then error "10"
-end try
-
-log "Test 11"
-try
-	log textBetween("<<", "<", ">")
-on error eMsg number eNum
-	if eMsg is not "textBetween: End string not found" then error "11"
-end try
-
-log "Test 12"
-try
-	log textBetween("<>", "<", ">")
-on error eMsg number eNum
-	if eMsg is not "textBetween: End string not found" then error "12"
-end try
-
-log "Test 13"
-if textBetween("<a>", "<", ">") is not "a" then error "13"
-
-log "Test 14"
-try
-	log textBetween("<a<", "<", ">")
-on error eMsg number eNum
-	if eMsg is not "textBetween: End string not found" then error "14"
-end try
-
-log "Test 15"
-if textBetween("<a>", 1, 3) is not "a" then error "15"
-
-log "Test 16"
-try
-	log textBetween("<a", 1, 3)
-on error eMsg number eNum
-	if eMsg is not "textBetween: Invalid end offset specified. Out of bounds." then error "16"
-end try
-
-log "Test 17"
-if textBetween("Hello World", 2, 5) is not "ll" then error "17"
