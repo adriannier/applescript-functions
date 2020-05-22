@@ -15,7 +15,7 @@ log hfsPath("/Library")
 on hfsPath(aPath)
 	
 	-- Convert path to text
-	set aPath to aPath as text
+	set aPath to aPath as  text
 	
 	if aPath starts with "'" and aPath ends with "'" then
 		-- Remove quotes
