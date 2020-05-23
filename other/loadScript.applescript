@@ -15,9 +15,9 @@ on loadScript(scriptPath)
 	(* 
 		Loads an AppleScript file compiling it first if necessary. Specified path can be:
 		- single file name 
-		  --> file assumed in same directory as main script
+		  --> file assumed in same directory as current script
 		- single file name prefixed with ./ 
-		  --> file assumed in same directory as main script
+		  --> file assumed in same directory as current script
 		- relative POSIX path prefixed with one or more ../ 
 		  --> file assumed at relative path
 		- relative POSIX path starting with ~/ 
