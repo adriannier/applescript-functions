@@ -1,12 +1,18 @@
-loadScript("~/Projects/applescript-libraries/CodaAutomator/CodaAutomator.applescript")
+on run
+	
+	set dictLibrary to loadScript("~/Projects/applescript-dictionary/Dictionary.applescript")
+	
+	set dict to dictLibrary's newDictionary()
+	
+	dict's addValueForKey("test", current date)
+	
+	return dict's recordRepresentation()
+	
+end run
 
 on loadScript(scriptPath)
 	
-	tell application "System Events"
-		
-		try
-			
-			(* 
+	(* 
 		Loads an AppleScript file compiling it first if necessary. Specified path can be:
 		- single file name 
 		  --> file assumed in same directory as main script
@@ -19,36 +25,130 @@ on loadScript(scriptPath)
 		- full HFS-style path
 		- full POSIX path
 	*)
+	
+	try
+		
+		script Util
 			
-			log " asdf to load script from " & scriptPath & " "
+			on q(str)
+				
+				(* Return quoted string *)
+				
+				return quoted form of str
+			end q
 			
-			-- Convert path to text
-			try
-				set scriptPath to scriptPath as text
-			on error
-				set scriptPath to path of scriptPath
-			end try
+			on pp(aPath)
+				
+				(* Return posix path for path *)
+				
+				try
+					tell application "System Events" to return POSIX path of file (aPath as text)
+				on error
+					try
+						tell application "System Events" to return POSIX path of folder (aPath as text) & "/"
+					end try
+				end try
+			end pp
 			
-			if scriptPath starts with "'" and scriptPath ends with "'" then
-				-- Remove quotes
-				set scriptPath to text 2 thru -2 of anyPath
-			end if
+			on qpp(aPath)
+				
+				(* Return quoted posix path for path *)
+				
+				return q(pp(aPath))
+			end qpp
 			
-			if scriptPath does not contain "/" and scriptPath does not contain ":" then
-				-- Only filename specified; treat as path relative to current directory
-				set scriptPath to "./" & scriptPath
-			end if
+			on snr(str, search, replace)
+				
+				(* Search and replace *)
+				
+				return implode(explode(str, search), replace)
+				
+			end snr
 			
-			log " Normalized path to " & scriptPath & " "
+			on explode(str, dlmt)
+				
+				(* Convert string to list *)
+				
+				set prvDlmt to AppleScript's text item delimiters
+				set AppleScript's text item delimiters to dlmt
+				set strComponents to text items of str
+				set AppleScript's text item delimiters to prvDlmt
+				
+				return strComponents
+				
+			end explode
+			
+			on implode(strComponents, dlmt)
+				
+				(* Convert list to string *)
+				
+				set prvDlmt to AppleScript's text item delimiters
+				set AppleScript's text item delimiters to dlmt
+				set str to strComponents as text
+				set AppleScript's text item delimiters to prvDlmt
+				
+				return str
+				
+			end implode
+			
+			on unwrap(str, char)
+				
+				(* Remove first and last character of `str` if both characters are `char` *)
+				
+				if str starts with char and str ends with char and str is not (char & char) then
+					return text 2 thru -2 of str
+				end if
+				
+				return str
+				
+			end unwrap
+			
+			on pathToString(aPath)
+				
+				(* Convert any path to a string *)
+				
+				try
+					tell application "System Events" to return scriptPath as text
+				on error
+					tell application "System Events" to return path of scriptPath
+				end try
+				
+			end pathToString
+			
+		end script
+		
+		-- Convert path to text
+		tell Util
+			set scriptPath to pathToString(scriptPath)
+			set scriptPath to unwrap(scriptPath, "'")
+		end tell
+		
+		if scriptPath does not contain "/" and scriptPath does not contain ":" then
+			-- Only filename specified; treat as path relative to current directory
+			set scriptPath to "./" & scriptPath
+		end if
+		
+		-- Get the path to this script
+		try
+			set myPath to Util's pp(kScriptPath)
+		on error
+			set myPath to Util's pp(path to me)
+		end try
+		
+		-- Get path to parent directory
+		tell Util
+			set myPathComponents to explode(myPath, "/")
+			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents, "/")
+		end tell
+		
+		if scriptPath does not contain ":" then
 			
 			if scriptPath starts with "~" then
 				
-				-- Expand tilde
-				
-				log " Expanding tilde "
+				(* Expand tilde *)
 				
 				-- Get the path to the userÕs home folder
-				set userPath to POSIX path of (path to home folder)
+				set userPath to Util's pp(path to home folder as text)
 				
 				-- Remove trailing slash
 				if userPath ends with "/" then set userPath to (text 1 thru -2 of userPath) as text
@@ -63,171 +163,119 @@ on loadScript(scriptPath)
 					set scriptPath to userPath & (text 2 thru -1 of scriptPath)
 				end if
 				
+				log " Expanded tilde to " & scriptPath
+				
 			else if scriptPath starts with "./" then
 				
-				-- Convert reference to current directory to absolute path
+				(* Convert current directory reference *)
 				
-				set scriptPath to text 3 thru -1 of scriptPath
+				set scriptPath to myParentDirectoryPath & text 3 thru -1 of scriptPath
 				
-				try
-					set myPath to POSIX path of file kScriptPath
-				on error
-					set myPath to POSIX path of (path to me)
-				end try
-				
-				set prvDlmt to AppleScript's text item delimiters
-				set AppleScript's text item delimiters to "/"
-				set parentDirectoryPath to (text items 1 thru -2 of myPath) & "" as text
-				set AppleScript's text item delimiters to prvDlmt
-				
-				set scriptPath to parentDirectoryPath & scriptPath
+				log " Converted reference to current directory to " & scriptPath
 				
 			else if scriptPath starts with "../" then
 				
 				-- Convert reference to parent directories to absolute path
 				
-				try
-					set myPath to POSIX path of file kScriptPath
-				on error
-					set myPath to POSIX path of (path to me)
-				end try
-				
-				set prvDlmt to AppleScript's text item delimiters
-				set AppleScript's text item delimiters to "../"
-				set pathComponents to text items of scriptPath
-				set parentDirectoryCount to (count of pathComponents) - 1
-				set AppleScript's text item delimiters to "/"
-				set myPathComponents to text items of myPath
-				set parentDirectoryPath to (items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "" as text
-				set AppleScript's text item delimiters to prvDlmt
+				tell Util
+					set pathComponents to explode(scriptPath, "../")
+					set parentDirectoryCount to (count of pathComponents) - 1
+					set parentDirectoryPath to implode((items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "", "/")
+				end tell
 				
 				set scriptPath to parentDirectoryPath & item -1 of pathComponents
 				
-			end if
-			
-			try
-				set scriptPath to file scriptPath
-			on error eMsg number eNum
-				log " Script file not found at " & scriptPath & " "
-				error "Script file not found at \"" & scriptPath & "\""
-			end try
-			
-			try
-				set scriptPath to path of scriptPath
-			on error
-				set scriptPath to scriptPath as text
-			end try
-			
-			log " Script path after transformations is " & scriptPath
-			
-			-- Get information on existing script file
-			try
-				set scriptInfo to get info for file scriptPath
-			on error
-				error "Could not find script file at \"" & scriptPath & "\""
-			end try
-			
-			if scriptPath ends with ".applescript" then
-				
-				log " Plain-text AppleScript specified "
-				
-				-- Plain text version of script; look for compiled version
-				
-				-- Create id for this script based on its path
-				set prvDlmt to AppleScript's text item delimiters
-				set AppleScript's text item delimiters to {":", " ", "/"}
-				set scriptId to text items of scriptPath
-				set AppleScript's text item delimiters to "_"
-				set scriptId to scriptId as text
-				set AppleScript's text item delimiters to prvDlmt
-				
-				-- Remove the .applescript suffix from the id
-				set scriptId to text 1 thru -13 of scriptId
-				
-				-- Generate temporary path
-				set tempScriptPath to ((path to temporary items folder from user domain) as text) & scriptId & ".scpt"
-				
-				-- Get information on existing compiled script		
-				try
-					set tempScriptInfo to get info for file tempScriptPath
-				on error
-					set tempScriptInfo to false
-				end try
-				
-				
-				if tempScriptInfo is false or (modification date of scriptInfo) > (modification date of tempScriptInfo) then
-					
-					log " Preparing paths for shell script "
-					
-					set scriptPathPP to (POSIX path of file scriptPath)
-					set tempScriptPathPP to (POSIX path of (path to temporary items folder from user domain)) & "/" & scriptId & ".scpt"
-					
-					tell AppleScript
-						set scriptPathQPP to quoted form of scriptPathPP
-						set tempScriptPathQPP to quoted form of tempScriptPathPP
-					end tell
-					
-					
-					log " Compiling script at " & scriptPathQPP & " to " & tempScriptPathQPP & " "
-					
-					-- Compiled version does not exist or is out-dated; re-compile script
-					
-					set compileCommand to "/usr/bin/osacompile -o " & tempScriptPathQPP & " " & scriptPathQPP
-					
-					log " " & compileCommand & " "
-					try
-						do shell script compileCommand
-					on error eMsg number eNum
-						error "loadScript: Failed to compile script file at \"" & scriptPathPP & "\". " & eMsg number eNum
-					end try
-					
-				end if
-				
-				
-				
-				set useTempScript to true
+				log " Converted relative path to " & scriptPath
 				
 			else
 				
-				log " Compiled AppleScript specified "
-				
-				set useTempScript to false
+				log " Normalized path to " & scriptPath & " "
 				
 			end if
 			
-			-- Determine which path to load from
-			if useTempScript then
-				set scriptToLoad to tempScriptPath
-			else
-				set scriptToLoad to scriptPath
-			end if
+			-- Turn POSIX path to HFS path
+			set scriptPath to POSIX file scriptPath as text
 			
-			-- Load the script			
-			try
-				log " Loading script from " & scriptToLoad & " "
-				
-				set loadedScript to load script file scriptToLoad
-			on error eMsg number eNum
-				error "loadScript: Could not load script file at \"" & scriptToLoad & "\". " & eMsg number eNum
-			end try
-			
-			-- Set the script's own path property
-			try
-				set loadedScript's kScriptPath to scriptPath
-				log " Set kScriptPath property in loaded script to " & scriptPath & " "
-			on error eMsg number eNum
-				log " Warning! Could not set script path in loaded script: " & eMsg & " "
-			end try
-			
-			return loadedScript
-			
-		on error eMsg number eNum
-			
-			log " " & eMsg & " (" & (eNum as string) & ")"
-			error "loadScript(): " & eMsg number eNum
-			
+		end if
+		
+		-- Get information on existing script file
+		try
+			tell application "System Events"
+				set scriptModDate to modification date of file scriptPath
+			end tell
+		on error
+			error "Could not find script file at \"" & scriptPath & "\""
 		end try
 		
-	end tell
+		if scriptPath ends with ".applescript" then
+			
+			log " Plain-text AppleScript specified "
+			
+			-- Plain text version of script; look for compiled version
+			
+			-- Turn script path into a string we can use for identification
+			tell Util to set scriptId to implode(explode(scriptPath, {":", " ", "/"}), "_")
+			-- Remove the .applescript suffix from the id
+			set scriptId to text 1 thru -13 of scriptId
+			
+			-- Generate temporary path
+			set compiledScriptParent to (path to temporary items folder from user domain) as text
+			set compiledScriptPath to compiledScriptParent & scriptId & ".scpt"
+			
+			-- Get information on possibly existing compiled script		
+			try
+				tell application "System Events"
+					set compiledModDate to modification date of file compiledScriptPath
+				end tell
+			on error
+				set compiledModDate to false
+			end try
+			
+			if compiledModDate is false or scriptModDate > compiledModDate then
+				
+				log " Script changed or was never compiled "
+				
+				set compileCommand to "/usr/bin/osacompile -o " & Util's q(Util's pp(compiledScriptParent) & scriptId & ".scpt") & " " & Util's qpp(scriptPath)
+				
+				try
+					do shell script compileCommand
+				on error eMsg number eNum
+					error "Failed to compile script file at \"" & scriptPath & "\". " & eMsg number eNum
+				end try
+				
+			end if
+			
+		else
+			
+			log " Compiled AppleScript specified "
+			
+			set compiledScriptPath to scriptPath
+			
+		end if
+		
+		-- Load the script			
+		try
+			log " Loading script from \"" & compiledScriptPath & "\" "
+			set loadedScript to load script file compiledScriptPath
+		on error eMsg number eNum
+			error "Could not load script file at \"" & compiledScriptPath & "\". " & eMsg number eNum
+		end try
+		
+		-- Try to set script's own path property
+		try
+			set loadedScript's kScriptPath to scriptPath
+			log " Property kScriptPath set \"" & scriptPath & "\" in loaded script "
+		on error eMsg number eNum
+			log " Warning! Could not set script path in loaded script: " & eMsg & " "
+		end try
+		
+		return loadedScript
+		
+	on error eMsg number eNum
+		
+		log " " & eMsg & " (" & (eNum as string) & ")"
+		error "loadScript(): " & eMsg number eNum
+		
+	end try
 	
 end loadScript
