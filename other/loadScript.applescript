@@ -50,6 +50,7 @@ on loadScript(scriptPath)
 						error "Util/pp(): " & eMsg number eNum
 					end try
 				end try
+				
 			end pp
 			
 			on qpp(aPath)
@@ -140,7 +141,7 @@ on loadScript(scriptPath)
 		-- Get path to parent directory
 		tell Util
 			set myPathComponents to explode(myPath, "/")
-			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
+			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents, "/")
 		end tell
 		
 		if scriptPath does not contain ":" then
@@ -204,6 +205,7 @@ on loadScript(scriptPath)
 		try
 			tell application "System Events"
 				set scriptModDate to modification date of file scriptPath
+				set scriptName to name of file scriptPath
 			end tell
 		on error
 			error "Could not find script file at \"" & scriptPath & "\""
@@ -266,10 +268,32 @@ on loadScript(scriptPath)
 		-- Try to set script's own path property
 		try
 			set loadedScript's kScriptPath to scriptPath
-			log " Property kScriptPath set to \"" & scriptPath & "\" in loaded script "
+			log " Property kScriptPath set \"" & scriptPath & "\" in loaded script "
 		on error eMsg number eNum
-			log " Warning! Could not set script path in loaded script: " & eMsg & " "
+			log " Script has no kScriptPath property "
 		end try
+		
+		-- Try to initialize script
+		try
+			set initFunctionClass to class of loadedScript's initScript
+		on error eMsg number eNum
+			set theClass to missing value
+			log " Script has no initScript() function "
+		end try
+		
+		if initFunctionClass is handler then
+			try
+				set initResult to loadedScript's initScript()
+				try
+					get initResult
+					set loadedScript to initResult
+				end try
+				
+			on error eMsg number eNum
+				error " Error while initializing script " & scriptName & ": " & eMsg number eNum
+			end try
+		end if
+		
 		
 		return loadedScript
 		
