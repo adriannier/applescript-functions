@@ -46,6 +46,8 @@ on loadScript(scriptPath)
 				on error
 					try
 						tell application "System Events" to return POSIX path of folder (aPath as text) & "/"
+					on error eMsg number eNum
+						error "Util/pp(): " & eMsg number eNum
 					end try
 				end try
 			end pp
