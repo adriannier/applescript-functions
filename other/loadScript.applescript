@@ -266,7 +266,7 @@ on loadScript(scriptPath)
 		-- Try to set script's own path property
 		try
 			set loadedScript's kScriptPath to scriptPath
-			log " Property kScriptPath set \"" & scriptPath & "\" in loaded script "
+			log " Property kScriptPath set to \"" & scriptPath & "\" in loaded script "
 		on error eMsg number eNum
 			log " Warning! Could not set script path in loaded script: " & eMsg & " "
 		end try
