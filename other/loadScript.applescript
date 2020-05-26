@@ -140,7 +140,7 @@ on loadScript(scriptPath)
 		-- Get path to parent directory
 		tell Util
 			set myPathComponents to explode(myPath, "/")
-			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents, "/")
+			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
 		end tell
 		
 		if scriptPath does not contain ":" then
