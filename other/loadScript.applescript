@@ -141,7 +141,7 @@ on loadScript(scriptPath)
 		-- Get path to parent directory
 		tell Util
 			set myPathComponents to explode(myPath, "/")
-			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents, "/")
+			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
 		end tell
 		
 		if scriptPath does not contain ":" then
@@ -277,7 +277,7 @@ on loadScript(scriptPath)
 		try
 			set initFunctionClass to class of loadedScript's initScript
 		on error eMsg number eNum
-			set theClass to missing value
+			set initFunctionClass to missing value
 			log " Script has no initScript() function "
 		end try
 		
