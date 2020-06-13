@@ -21,9 +21,10 @@ on easterDate(yearNumber, dayOffset)
 						- "Corpus Christi"
 						
 		Disclaimer: The purpose of this function is to calculate holidays
-		            in respect to commercial opening hours. This is in no
-					way an endorsement for any religion or condoning of
-					crimes committed by any religion.
+		            in respect to commercial opening hours. This represents
+		            in no way an endorsement for any religion or condonement
+                    of crimes committed by individuals or organizations
+                    belonging to any religion.
 		
 	*)
 	
