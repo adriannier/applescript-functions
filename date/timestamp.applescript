@@ -26,15 +26,15 @@ on timestamp(aDate as date, aFormat)
 		
 		Formats:
 		
-		1: 2000-01-28 23:15:59 -- For log files
+		1: 1993-10-04 10:02:42 -- For log files
 		
-		2: 2000-01-28_23-15-59 -- For file names
+		2: 1993-10-04_10-02-42 -- For file names
 		
-		3: Jan 28 23:15:59 -- For log files (shorter)
+		3: Oct 4 10:02:42 -- For log files (shorter)
 		
-		4: 20000128T231559 -- RFC3339 / iCalendar local time
+		4: 19931004T100242 -- RFC3339 / iCalendar local time
 		
-		5: 20000128231559 -- Digits only
+		5: 19931004100242 -- Digits only
 			
 	*)
 	
@@ -48,7 +48,7 @@ on timestamp(aDate as date, aFormat)
 				
 			else if aFormat is 2 then
 				
-				return text 1 thru 4 & "-" & text 6 thru 7 & "-" & text 9 thru 10 & "_" & text 12 thru 13 & "-" & text 15 thru 16 & "-" & text 18 thru 19
+				return text 1 thru 10 & "_" & text 12 thru 13 & "-" & text 15 thru 16 & "-" & text 18 thru 19
 				
 			else if aFormat is 3 then
 				
