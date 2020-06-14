@@ -20,7 +20,7 @@ on timestamp(aDate as date, aFormat)
 	
 	(*
 	
-		With big thanks to CK (twitter.com/AppleScriptive) for pointing out Çclass isotÈ
+		With big thanks to CK (twitter.com/AppleScriptive) for pointing out Â«class isotÂ»
 		
 		Returns the specified date and time as a string
 		
@@ -38,7 +38,7 @@ on timestamp(aDate as date, aFormat)
 			
 	*)
 	
-	tell aDate as Çclass isotÈ as string
+	tell aDate as Â«class isotÂ» as string
 		
 		tell contents
 			
