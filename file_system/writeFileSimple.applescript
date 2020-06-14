@@ -56,7 +56,8 @@ on simpleWriteFile(content, filePath, contentType)
 		
 		-- Write to file
 		try
-			
+		
+			set eof of file tempPath to 0
 			write content to file filePath starting at 0 as contentType
 			
 		on error errorMessage number errorNumber
