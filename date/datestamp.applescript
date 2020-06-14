@@ -16,7 +16,7 @@ on datestamp(aDate as date, aFormat)
 	
 		With big thanks to CK (twitter.com/AppleScriptive) for pointing out «class isot»
 		
-		Returns the specified date and time as a string
+		Returns the specified date as a string
 		
 		Formats:
 		
