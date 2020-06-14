@@ -20,7 +20,7 @@ on datestamp(aDate as date, aFormat)
 		
 		Formats:
 		
-		1: 2000-01-28 23:15:59 -- For log files
+		1: 2000-01-28 -- ISO 8601
 		
 		2: Same as 1 -- Compatibility to timestamp() function
 		
