@@ -60,4 +60,4 @@ on datestamp(aDate as date, aFormat)
 		
 	end tell
 	
-end timestamp
+end datestamp
