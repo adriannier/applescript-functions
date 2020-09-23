@@ -57,11 +57,113 @@ on loadScript(specifiedPath)
 		
 		script Util
 			
+			on hfsPath(aPath)
+				
+				log " Converting path \"" & aPath & "\" to HFS"
+				
+				set aPath to pathToString(aPath)
+				set aPath to unwrap(aPath, "'")
+				
+				if aPath does not contain "/" and aPath does not contain ":" then
+					-- Only filename specified; treat as path relative to current directory
+					set aPath to "./" & aPath
+					log " Converted file name specification to " & aPath
+				end if
+				
+				-- Get the path to this script
+				try
+					set myPath to pp(kScriptPath)
+				on error
+					set myPath to pp(path to me)
+				end try
+				
+				log " Own path is " & myPath
+				
+				-- Get path to parent directory
+				set myPathComponents to explode(myPath, "/")
+				set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
+				
+				log " Parent path is " & myParentDirectoryPath
+				
+				if aPath does not contain ":" then
+					
+					if aPath starts with "~" then
+						
+						(* Expand tilde *)
+						
+						-- Get the path to the user’s home folder
+						tell application "System Events" to set userPath to Util's pp(path to home folder as text)
+						
+						-- Remove trailing slash
+						if userPath ends with "/" then
+							tell application "System Events"
+								set userPath to text 1 thru -2 of userPath
+							end tell
+						end if
+						
+						log " Found user’s home folder at " & userPath & " "
+						
+						if aPath is "~" then
+							-- Simply use home folder path
+							set aPath to userPath
+						else
+							-- Concatenate paths
+							tell application "System Events"
+								set aPath to userPath & (text 2 thru -1 of aPath)
+							end tell
+						end if
+						
+						log " Expanded tilde to " & aPath
+						
+					else if aPath starts with "./" then
+						
+						(* Convert current directory reference *)
+						
+						tell application "System Events"
+							set aPath to myParentDirectoryPath & text 3 thru -1 of aPath
+						end tell
+						
+						log " Converted reference to current directory to " & aPath
+						
+					else if aPath starts with "../" then
+						
+						-- Convert reference to parent directories to absolute path
+						
+						tell Util
+							set pathComponents to explode(aPath, "../")
+							set parentDirectoryCount to (count of pathComponents) - 1
+							set parentDirectoryPath to implode((items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "", "/")
+						end tell
+						
+						set aPath to parentDirectoryPath & item -1 of pathComponents
+						
+						log " Converted relative path to " & aPath
+						
+					else
+						
+						log " Normalized path to " & aPath & " "
+						
+					end if
+					
+					-- Turn POSIX path to HFS path
+					tell application "System Events"
+						set aPath to POSIX file aPath as text
+					end tell
+					
+				end if
+				
+				log " Converted path to " & aPath
+				
+				return aPath
+				
+			end hfsPath
+			
 			on q(str)
 				
 				(* Return quoted string *)
 				
 				return quoted form of str
+				
 			end q
 			
 			on pp(aPath)
@@ -70,7 +172,8 @@ on loadScript(specifiedPath)
 				
 				try
 					tell application "System Events" to return POSIX path of file (aPath as text)
-				on error
+				on error eMsg number eNum
+					-- log " Warning! System Events could not get posix path of " & aPath
 					try
 						tell application "System Events" to return POSIX path of folder (aPath as text) & "/"
 					on error eMsg number eNum
@@ -85,6 +188,7 @@ on loadScript(specifiedPath)
 				(* Return quoted posix path for path *)
 				
 				return q(pp(aPath))
+				
 			end qpp
 			
 			on snr(str, search, replace)
@@ -149,105 +253,8 @@ on loadScript(specifiedPath)
 			
 		end script
 		
-		log " Specified script path is " & specifiedPath
-		
 		-- Convert path to text
-		tell Util
-			set scriptPath to pathToString(specifiedPath)
-			set scriptPath to unwrap(scriptPath, "'")
-		end tell
-		
-		if scriptPath does not contain "/" and scriptPath does not contain ":" then
-			-- Only filename specified; treat as path relative to current directory
-			set scriptPath to "./" & scriptPath
-			log " Converted script path to " & scriptPath
-		end if
-		
-		-- Get the path to this script
-		try
-			set myPath to Util's pp(kScriptPath)
-		on error
-			set myPath to Util's pp(path to me)
-		end try
-		
-		log " Own path is " & myPath
-		
-		-- Get path to parent directory
-		tell Util
-			set myPathComponents to explode(myPath, "/")
-			set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
-		end tell
-		
-		log " Parent path is " & myParentDirectoryPath
-		
-		if scriptPath does not contain ":" then
-			
-			if scriptPath starts with "~" then
-				
-				(* Expand tilde *)
-				
-				-- Get the path to the user’s home folder
-				tell application "System Events" to set userPath to Util's pp(path to home folder as text)
-				
-				-- Remove trailing slash
-				if userPath ends with "/" then
-					tell application "System Events"
-						set userPath to text 1 thru -2 of userPath
-					end tell
-				end if
-				
-				log " Found user’s home folder at " & userPath & " "
-				
-				if scriptPath is "~" then
-					-- Simply use home folder path
-					set scriptPath to userPath
-				else
-					-- Concatenate paths
-					tell application "System Events"
-						set scriptPath to userPath & (text 2 thru -1 of scriptPath)
-					end tell
-				end if
-				
-				log " Expanded tilde to " & scriptPath
-				
-			else if scriptPath starts with "./" then
-				
-				(* Convert current directory reference *)
-				
-				tell application "System Events"
-					set scriptPath to myParentDirectoryPath & text 3 thru -1 of scriptPath
-				end tell
-				
-				log " Converted reference to current directory to " & scriptPath
-				
-			else if scriptPath starts with "../" then
-				
-				-- Convert reference to parent directories to absolute path
-				
-				tell Util
-					set pathComponents to explode(scriptPath, "../")
-					set parentDirectoryCount to (count of pathComponents) - 1
-					set parentDirectoryPath to implode((items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "", "/")
-				end tell
-				
-				set scriptPath to parentDirectoryPath & item -1 of pathComponents
-				
-				log " Converted relative path to " & scriptPath
-				
-			else
-				
-				log " Normalized path to " & scriptPath & " "
-				
-			end if
-			
-			-- Turn POSIX path to HFS path
-			tell application "System Events"
-				set scriptPath to POSIX file scriptPath as text
-			end tell
-			
-		end if
-		
-		log " Converted script path to " & scriptPath
+		tell Util to set scriptPath to hfsPath(specifiedPath)
 		
 		-- Get information on existing script file
 		try
@@ -279,7 +286,16 @@ on loadScript(specifiedPath)
 				try
 					set compiledScriptParent to (path to temporary items folder)
 				on error eMsg number eNum
-					error "Could not get path to temporary items folder. " & eMsg number eNum
+					try
+						tell application "System Events" to set compiledScriptParent to (path to temporary items folder)
+					on error eMsg number eNum
+						try
+							set compiledScriptParent to do shell script "echo $TMPDIR"
+							set compiledScriptParent to POSIX file compiledScriptParent
+						on error eMsg number eNum
+							error "Could not get path to temporary items folder. " & eMsg number eNum
+						end try
+					end try
 				end try
 			end try
 			
@@ -296,7 +312,9 @@ on loadScript(specifiedPath)
 				tell application "System Events"
 					set compiledModDate to modification date of file compiledScriptPath
 				end tell
-			on error
+				log " Modification date of compiled script is " & compiledModDate
+			on error eMsg number eNum
+				log " Could not get modification date of compiled script. " & eMsg & " (" & (eNum as string) & ")"
 				set compiledModDate to false
 			end try
 			
