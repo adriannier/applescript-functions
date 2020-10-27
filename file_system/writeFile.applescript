@@ -2,7 +2,11 @@ writeFile("Hello World", "~/Desktop/Demo 1.txt", {overrideType:«class utf8»})
 
 writeFile("Hello World", "~/Desktop/Demo 2.txt", {atomically:true})
 
-writeFile("Hello World " & (random number from 1000 to 9999), "~/Desktop/Demo 3.log", {appendNewContent:true, appendWithNewline:true})
+repeat 10 times
+	
+	writeFile("Hello World " & (random number from 1000 to 9999), "~/Desktop/Demo 3.log", {appendNewContent:true, appendWithNewline:true, overrideType:«class utf8»})
+	
+end repeat
 
 on writeFile(content, filePath, options)
 	
@@ -34,29 +38,80 @@ on writeFile(content, filePath, options)
 		-- Convert path to text
 		set filePath to filePath as text
 		
-		-- Remove quotes
 		if filePath starts with "'" and filePath ends with "'" then
-			set filePath to text 2 thru -2 of filePath
+			-- Remove quotes
+			set filePath to text 2 thru -2 of anyPath
 		end if
 		
-		-- Expand tilde
+		if filePath does not contain "/" and filePath does not contain ":" then
+			-- Only filename specified; treat as path relative to current directory
+			set filePath to "./" & filePath
+		end if
+		
+		
 		if filePath starts with "~" then
+			
+			-- Expand tilde
 			
 			-- Get the path to the user’s home folder
 			set userPath to POSIX path of (path to home folder)
 			
 			-- Remove trailing slash
-			if userPath ends with "/" then set userPath to text 1 thru -2 of userPath as text
+			if userPath ends with "/" then set userPath to (text 1 thru -2 of userPath) as text
+			
 			if filePath is "~" then
+				-- Simply use home folder path
 				set filePath to userPath
 			else
-				set filePath to userPath & text 2 thru -1 of filePath
+				-- Concatenate paths
+				set filePath to userPath & (text 2 thru -1 of filePath)
 			end if
+			
+		else if filePath starts with "./" then
+			
+			-- Convert reference to current directory to absolute path
+			
+			set filePath to text 3 thru -1 of filePath
+			
+			try
+				set myPath to POSIX path of kScriptPath
+			on error
+				set myPath to POSIX path of (path to me)
+			end try
+			
+			set prvDlmt to text item delimiters
+			set text item delimiters to "/"
+			set parentDirectoryPath to (text items 1 thru -2 of myPath) & "" as text
+			set text item delimiters to prvDlmt
+			
+			set filePath to parentDirectoryPath & filePath
+			
+		else if filePath starts with "../" then
+			
+			-- Convert reference to parent directories to absolute path
+			
+			try
+				set myPath to POSIX path of kScriptPath
+			on error
+				set myPath to POSIX path of (path to me)
+			end try
+			
+			set prvDlmt to text item delimiters
+			set text item delimiters to "../"
+			set pathComponents to text items of filePath
+			set parentDirectoryCount to (count of pathComponents) - 1
+			set text item delimiters to "/"
+			set myPathComponents to text items of myPath
+			set parentDirectoryPath to (items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "" as text
+			set text item delimiters to prvDlmt
+			
+			set filePath to parentDirectoryPath & item -1 of pathComponents
 			
 		end if
 		
-		-- Convert to HFS style path if necessary
-		if filePath does not contain ":" then set filePath to (POSIX file filePath) as text
+		if filePath does not contain ":" then
+			set filePath to (POSIX file filePath) as text
+		end if
 		
 		-- Set default options
 		set overrideType to false
@@ -69,22 +124,24 @@ on writeFile(content, filePath, options)
 		try
 			set overrideType to (overrideType of options)
 		end try
+		
 		if overrideType is false then set overrideType to class of content
+		
 		try
 			set atomically to (atomically of options)
 		end try
+		
 		try
 			set appendNewContent to (appendNewContent of options)
 		end try
+		
 		try
 			set appendWithNewline to (appendWithNewline of options)
 		end try
+		
 		try
 			set newlineCharacter to (newlineCharacter of options)
 		end try
-		
-		
-		set originalContent to "<-FileHadNoContent->"
 		
 		if atomically is false then
 			
@@ -134,43 +191,16 @@ on writeFile(content, filePath, options)
 			end if
 			
 			-- Create a unique temporary file path
+			
 			set i to 1
+			
 			repeat
+				
 				set tempPath to parentFolderPath & baseName & "_" & (i as text) & "." & suffix
 				tell application "System Events" to if (exists file tempPath) is false then exit repeat
 				set i to i + 1
+				
 			end repeat
-			
-			-- Read original file content if necessary
-			if appendNewContent then
-				
-				tell application "System Events" to set fileExists to (exists file filePath)
-				
-				if fileExists then
-					
-					try
-						open for access file filePath
-					on error errorMessage number errorNumber
-						error "Could not open file for reading: " & errorMessage number errorNumber
-					end try
-					
-					try
-						set originalContent to read file filePath as overrideType
-					on error errorMessage number errorNumber
-						try
-							close access file filePath
-						end try
-						error "Could not read original file: " & errorMessage number errorNumber
-					end try
-					
-					try
-						close access file filePath
-					end try
-					
-					
-				end if
-				
-			end if
 			
 		end if
 		
@@ -185,48 +215,34 @@ on writeFile(content, filePath, options)
 		try
 			
 			-- Determine end of file and data to write
-			if appendNewContent is false then
-				
-				set eof of file tempPath to 0
-				set fileEnd to 0
-				set writeData to content
-				
-			else
+			
+			set writeData to content
+			set fileEnd to 0
+			
+			if appendNewContent then
 				
 				try
 					set fileEnd to (get eof of file tempPath) + 1
-				on error
-					set fileEnd to 0
 				end try
 				
-				if originalContent is not "<-FileHadNoContent->" then
-					
-					if appendWithNewline then
-						set writeData to originalContent & content & newlineCharacter
-					else
-						set writeData to originalContent & content
-					end if
-					
-				else
-					
-					if appendWithNewline then
-						set writeData to content & newlineCharacter
-					else
-						set writeData to content
-					end if
-					
+				if appendWithNewline then
+					set writeData to writeData & newlineCharacter
 				end if
 				
 			end if
 			
+			log writeData
 			
 			write writeData to file tempPath starting at fileEnd as overrideType
 			
 		on error errorMessage number errorNumber
+			
 			try
 				close access file tempPath
 			end try
+			
 			error "Error while writing to file: " & errorMessage number errorNumber
+			
 		end try
 		
 		
@@ -239,7 +255,6 @@ on writeFile(content, filePath, options)
 		-- Option: Atomically - Delete original file and rename backup file
 		
 		if tempPath is not filePath then
-			
 			
 			try
 				tell application "System Events"
@@ -269,7 +284,6 @@ on writeFile(content, filePath, options)
 				end tell
 			end try
 			
-			
 		end if
 		
 		
@@ -287,6 +301,7 @@ on writeFile(content, filePath, options)
 		error errorMessage number errorNumber
 		
 		return false
+		
 	end try
 	
 	
