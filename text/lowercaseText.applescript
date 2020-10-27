@@ -1,10 +1,10 @@
-(*
-	Converts text to lower case.
-*)
-
 lowercaseText("Hello World!")
 
 on lowercaseText(aText)
+	
+	(*
+		Converts text to lower case.
+	*)
 	
 	-- Define character sets
 	set lowercaseCharacters to "abcdefghijklmnopqrstuvwxyz"
@@ -28,11 +28,11 @@ on lowercaseText(aText)
 	
 	-- Loop through every upper case character
 	repeat with i from 1 to count of uppercaseCharacters
-	
-		considering case
 		
-			if aText contains (item i of uppercaseCharacters) then
+		considering case
 			
+			if aText contains (item i of uppercaseCharacters) then
+				
 				-- Delimit string by upper case character
 				set text item delimiters to (item i of uppercaseCharacters)
 				set tempList to text items of aText
