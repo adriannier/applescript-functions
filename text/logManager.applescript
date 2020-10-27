@@ -71,7 +71,7 @@ on newLogManager(aLogFilePath)
 				set fileSize to 0
 			end try
 			
-			if fileSize ³ maxSize then archive()
+			if fileSize â‰¥ maxSize then archive()
 			
 			if writeToFile(msg) is false then
 				log msg
@@ -120,7 +120,7 @@ on newLogManager(aLogFilePath)
 			
 			(*
 	
-		With big thanks to CK (twitter.com/AppleScriptive) for pointing out Çclass isotÈ
+		With big thanks to CK (twitter.com/AppleScriptive) for pointing out Â«class isotÂ»
 		
 		Returns the specified date and time as a string
 		
@@ -138,7 +138,7 @@ on newLogManager(aLogFilePath)
 			
 	*)
 			
-			tell aDate as Çclass isotÈ as string
+			tell aDate as Â«class isotÂ» as string
 				
 				tell contents
 					
@@ -196,7 +196,7 @@ on newLogManager(aLogFilePath)
 				
 				-- Expand tilde
 				
-				-- Get the path to the userÕs home folder
+				-- Get the path to the userâ€™s home folder
 				set userPath to POSIX path of (path to home folder)
 				
 				-- Remove trailing slash
@@ -273,7 +273,7 @@ on newLogManager(aLogFilePath)
 			-- Expand tilde
 			if anyPath starts with "~" then
 				
-				-- Get the path to the userÕs home folder
+				-- Get the path to the userâ€™s home folder
 				set userPath to POSIX path of (path to home folder)
 				
 				-- Remove trailing slash
@@ -327,7 +327,7 @@ on newLogManager(aLogFilePath)
 						set fileEnd to 0
 					end try
 					
-					write (content & (ASCII character 10)) to file logFilePath starting at fileEnd as Çclass utf8È
+					write (content & (ASCII character 10)) to file logFilePath starting at fileEnd as Â«class utf8Â»
 					
 				on error errorMessage number errorNumber
 					
