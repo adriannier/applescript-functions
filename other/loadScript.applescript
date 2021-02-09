@@ -15,7 +15,7 @@ on loadScript(specifiedPath)
 	(* 
 	
 	loadScript("/path/to/script.applescript")
-	Version 2
+	Version 3
 	
 	Loads an AppleScript file compiling it first if necessary.
 	
@@ -39,7 +39,11 @@ on loadScript(specifiedPath)
 	
 	Version history
 	===============
+
+	Version 3 - 2021-02-09
 	
+	- Fixed bug in handling paths that start with "../"
+		
 	Version 2 - 2020-09-23
 	
 	- Handled error where sometimes the path to the temporary 
