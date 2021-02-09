@@ -13,45 +13,45 @@ end run
 on loadScript(specifiedPath)
 	
 	(* 
-		
-		loadScript("/path/to/script.applescript")
-		Version 2
-		
-		Loads an AppleScript file compiling it first if necessary.
-		
-		Specified path can be:
-		
-		- single file name 
-		  --> file assumed in same directory as current script
-		  
-		- single file name prefixed with ./ 
-		  --> file assumed in same directory as current script
-		  
-		- relative POSIX path prefixed with one or more ../ 
-		  --> file assumed at relative path
-		  
-		- relative POSIX path starting with ~/ 
-		  --> file assumed relative to home directory
-		  
-		- full HFS-style path
-		
-		- full POSIX path
-		
-		Version history
-		===============
-		
-		Version 2 - 2020-09-23
-		
-		- Handled error where sometimes the path to the temporary 
-		  items folder could not be gathered
-		  
-		- Packed uses of the text class inside System Events tell 
-		  blocks to avoid certain applications causing the class 
-		  to change during compile time
+	
+	loadScript("/path/to/script.applescript")
+	Version 2
+	
+	Loads an AppleScript file compiling it first if necessary.
+	
+	Specified path can be:
+	
+	- single file name 
+	  --> file assumed in same directory as current script
+	  
+	- single file name prefixed with ./ 
+	  --> file assumed in same directory as current script
+	  
+	- relative POSIX path prefixed with one or more ../ 
+	  --> file assumed at relative path
+	  
+	- relative POSIX path starting with ~/ 
+	  --> file assumed relative to home directory
+	  
+	- full HFS-style path
+	
+	- full POSIX path
+	
+	Version history
+	===============
+	
+	Version 2 - 2020-09-23
+	
+	- Handled error where sometimes the path to the temporary 
+	  items folder could not be gathered
+	  
+	- Packed uses of the text class inside System Events tell 
+	  blocks to avoid certain applications causing the class 
+	  to change during compile time
 
-		Version 1 - Initial release
-		
-	*)
+	Version 1 - Initial release
+	
+*)
 	
 	try
 		
@@ -131,7 +131,7 @@ on loadScript(specifiedPath)
 						
 						tell Util
 							set pathComponents to explode(aPath, "../")
-							set parentDirectoryCount to (count of pathComponents) - 1
+							set parentDirectoryCount to (count of pathComponents)
 							set parentDirectoryPath to implode((items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "", "/")
 						end tell
 						
