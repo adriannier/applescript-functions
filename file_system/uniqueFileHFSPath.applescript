@@ -7,8 +7,10 @@ uniqueFileHFSPath(path to home folder, "test", "txt")
 on uniqueFileHFSPath(parentFolderPath, fileName, suffix)
 	
 	(*
-	Generates a unique path for a file with the specified name and suffix in a folder located at the specified path.
-*)
+		Generates a unique path for a file with the 
+		specified name and suffix in a folder 
+		located at the specified path.
+	*)
 	
 	-- Convert path to text
 	set parentFolderPath to parentFolderPath as text
@@ -21,7 +23,7 @@ on uniqueFileHFSPath(parentFolderPath, fileName, suffix)
 	-- Expand tilde
 	if parentFolderPath starts with "~" then
 		
-		-- Get the path to the userâ€™s home folder
+		-- Get the path to the userÕs home folder
 		set userPath to POSIX path of (path to home folder)
 		
 		-- Remove trailing slash
