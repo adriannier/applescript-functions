@@ -15,6 +15,10 @@ log filterList({"Alpha", "Bravo", "Charlie"}, "!A*a")
 log filterList({"DeltaEchoFoxtrott", "Echo", "FoxtrottEcho", "EchoFoxtrott", "DeEcFox"}, "!*Ec*Fo*")
 log filterList({"Hello*World", "Hello**World"}, "!*\\*\\**")
 
+log "=========================== Testing multiple filters"
+log filterList({"Alpha", "Bravo", "Charlie"}, {"!Alpha", "B*"})
+log filterList({"Alpha", "Bravo", "Charlie"}, {"*a*", "*ie"})
+
 on filterList(lst, filterString)
 	
 	(* Filters the specified list using the filter string. *)
@@ -30,6 +34,26 @@ on filterList(lst, filterString)
 	-- Escape regular asterisks using backslash: \\*
 	
 	try
+		
+		-- Special case: Empty list
+		if lst is {} then return {}
+		
+		-- Handling multiple filters
+		if class of filterString is list then
+			
+			set buffer to lst
+			
+			repeat with i from 1 to count of filterString
+				
+				if buffer is {} then exit repeat
+				set buffer to filterList(lst, item i of filterString)
+				
+			end repeat
+			
+			return buffer
+			
+		end if
+		
 		
 		-- Check for negation
 		if filterString is "!" then
