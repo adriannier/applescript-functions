@@ -1,7 +1,3 @@
-(*
-	Converts any file reference even relative ones to a HFS-style path string.
-*)
-
 log hfsPath("test.txt")
 
 log hfsPath("./test.txt")
@@ -14,8 +10,10 @@ log hfsPath("/Library")
 
 on hfsPath(aPath)
 	
+	(* Converts any file reference even relative ones to a HFS-style path string. *)
+	
 	-- Convert path to text
-	set aPath to aPath as  text
+	set aPath to aPath as text
 	
 	if aPath starts with "'" and aPath ends with "'" then
 		-- Remove quotes
@@ -26,7 +24,6 @@ on hfsPath(aPath)
 		-- Only filename specified; treat as path relative to current directory
 		set aPath to "./" & aPath
 	end if
-	
 	
 	if aPath starts with "~" then
 		
@@ -78,7 +75,7 @@ on hfsPath(aPath)
 		set prvDlmt to text item delimiters
 		set text item delimiters to "../"
 		set pathComponents to text items of aPath
-		set parentDirectoryCount to (count of pathComponents) - 1
+		set parentDirectoryCount to (count of pathComponents)
 		set text item delimiters to "/"
 		set myPathComponents to text items of myPath
 		set parentDirectoryPath to (items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "" as text
