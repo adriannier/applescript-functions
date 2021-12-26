@@ -17,7 +17,7 @@ log filterList({"Hello*World", "Hello**World"}, "!*\\*\\**")
 
 on filterList(lst, filterString)
 	
-	(* Filters the specified list using the the filter string. *)
+	(* Filters the specified list using the filter string. *)
 	
 	-- Valid filter strings:
 	-- "*pattern*": contains pattern
