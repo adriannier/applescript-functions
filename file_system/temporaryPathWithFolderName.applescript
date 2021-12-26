@@ -1,22 +1,23 @@
-(*
-	Generates a unique path for a file in the current user's temporary items folder. Takes a single argument that can be set to the name of a subfolder or false to create no subfolder.
-*)
-	
 temporaryPathWithFolderName("Test")
 
 on temporaryPathWithFolderName(folderName)
 	
 	(*
-Generates a unique path for a file in the current user's temporary items folder. Takes a single argument that can be set to the name of a subfolder or false to create no subfolder.
-*)
+		Generates a unique path for a file or folder in the 
+		current user's temporary items folder. 
+		
+		Takes a single argument that can be set to the
+		name of a subfolder or false to create no subfolder.
+	*)
 	
 	-- Generate pseudorandom numbers
 	set rand1 to (round (random number from 100 to 999)) as text
 	set rand2 to (round (random number from 100 to 999)) as text
-	set randomText to rand1 & "-" & rand2
+	set rand3 to (round (random number from 100 to 999)) as text
+	set randomText to rand1 & rand2 & rand3
 	
 	-- Create file name
-	set fileName to (("AppleScriptTempFile_" & randomText) as text)
+	set fileName to (("AppleScriptTemp" & randomText) as text)
 	
 	-- Get the path to the parent folder
 	set temporaryFolderPath to (path to temporary items folder from user domain) as text
@@ -37,15 +38,22 @@ Generates a unique path for a file in the current user's temporary items folder.
 	
 	repeat
 		if rNumber is 1 then
-			set tempFilePath to parentFolderPath & fileName
+			set tempPath to parentFolderPath & fileName
 		else
-			set tempFilePath to parentFolderPath & fileName & "_" & (rNumber as text)
+			set tempPath to parentFolderPath & fileName & "_" & (rNumber as text)
 		end if
 		
-		tell application "System Events" to if (exists file tempFilePath) is false then exit repeat
+		tell application "System Events"
+			if (exists file tempPath) is false then
+				if (exists folder tempPath) is false then
+					exit repeat
+				end if
+			end if
+		end tell
+		
 		set rNumber to rNumber + 1
 	end repeat
 	
-	return tempFilePath
+	return tempPath
 	
 end temporaryPathWithFolderName
