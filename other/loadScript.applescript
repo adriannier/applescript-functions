@@ -15,7 +15,7 @@ on loadScript(specifiedPath)
 	(* 
 	
 	loadScript("/path/to/script.applescript")
-	Version 3
+	Version 4
 	
 	Loads an AppleScript file compiling it first if necessary.
 	
@@ -40,6 +40,10 @@ on loadScript(specifiedPath)
 	Version history
 	===============
 
+	Version 4 - 2021-12-15
+	
+	- Improved logging
+	
 	Version 3 - 2021-02-09
 	
 	- Fixed bug in handling paths that start with "../"
@@ -63,7 +67,7 @@ on loadScript(specifiedPath)
 			
 			on hfsPath(aPath)
 				
-				log " Converting path \"" & aPath & "\" to HFS"
+				logMessage("Converting path \"" & aPath & "\" to HFS")
 				
 				set aPath to pathToString(aPath)
 				set aPath to unwrap(aPath, "'")
@@ -71,7 +75,7 @@ on loadScript(specifiedPath)
 				if aPath does not contain "/" and aPath does not contain ":" then
 					-- Only filename specified; treat as path relative to current directory
 					set aPath to "./" & aPath
-					log " Converted file name specification to " & aPath
+					logMessage("Converted file name specification to " & aPath)
 				end if
 				
 				-- Get the path to this script
@@ -81,13 +85,13 @@ on loadScript(specifiedPath)
 					set myPath to pp(path to me)
 				end try
 				
-				log " Own path is " & myPath
+				logMessage("Own path is " & myPath)
 				
 				-- Get path to parent directory
 				set myPathComponents to explode(myPath, "/")
 				set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
 				
-				log " Parent path is " & myParentDirectoryPath
+				logMessage("Parent path is " & myParentDirectoryPath)
 				
 				if aPath does not contain ":" then
 					
@@ -105,7 +109,7 @@ on loadScript(specifiedPath)
 							end tell
 						end if
 						
-						log " Found userÕs home folder at " & userPath & " "
+						logMessage("Found userÕs home folder at " & userPath)
 						
 						if aPath is "~" then
 							-- Simply use home folder path
@@ -117,7 +121,7 @@ on loadScript(specifiedPath)
 							end tell
 						end if
 						
-						log " Expanded tilde to " & aPath
+						logMessage("Expanded tilde to " & aPath)
 						
 					else if aPath starts with "./" then
 						
@@ -127,7 +131,7 @@ on loadScript(specifiedPath)
 							set aPath to myParentDirectoryPath & text 3 thru -1 of aPath
 						end tell
 						
-						log " Converted reference to current directory to " & aPath
+						logMessage("Converted reference to current directory to " & aPath)
 						
 					else if aPath starts with "../" then
 						
@@ -141,11 +145,11 @@ on loadScript(specifiedPath)
 						
 						set aPath to parentDirectoryPath & item -1 of pathComponents
 						
-						log " Converted relative path to " & aPath
+						logMessage("Converted relative path to " & aPath)
 						
 					else
 						
-						log " Normalized path to " & aPath & " "
+						logMessage("Normalized path to " & aPath)
 						
 					end if
 					
@@ -156,7 +160,7 @@ on loadScript(specifiedPath)
 					
 				end if
 				
-				log " Converted path to " & aPath
+				logMessage("Converted path to " & aPath)
 				
 				return aPath
 				
@@ -177,7 +181,7 @@ on loadScript(specifiedPath)
 				try
 					tell application "System Events" to return POSIX path of file (aPath as text)
 				on error eMsg number eNum
-					-- log " Warning! System Events could not get posix path of " & aPath
+					-- logMessage("Warning! System Events could not get posix path of " & aPath)
 					try
 						tell application "System Events" to return POSIX path of folder (aPath as text) & "/"
 					on error eMsg number eNum
@@ -255,7 +259,23 @@ on loadScript(specifiedPath)
 				
 			end pathToString
 			
-		end script
+			on logMessage(val)
+				
+				try
+					set val to val as text
+					
+					tell (current date) as Çclass isotÈ as string
+						tell contents to set ts to text 1 thru 10 & " " & text 12 thru -1
+					end tell
+					
+					log " " & ts & " " & val & " "
+				on error
+					log val
+				end try
+				
+			end logMessage
+			
+		end script -- Util
 		
 		-- Convert path to text
 		tell Util to set scriptPath to hfsPath(specifiedPath)
@@ -272,7 +292,7 @@ on loadScript(specifiedPath)
 		
 		if scriptPath ends with ".applescript" then
 			
-			log " Plain-text AppleScript specified "
+			Util's logMessage("Plain-text AppleScript specified")
 			
 			-- Plain text version of script; look for compiled version
 			
@@ -281,7 +301,7 @@ on loadScript(specifiedPath)
 			-- Remove the .applescript suffix from the id
 			tell application "System Events" to set scriptId to text 1 thru -13 of scriptId
 			
-			log " Script id is " & scriptId
+			Util's logMessage("Script id is " & scriptId)
 			
 			-- Generate temporary path
 			try
@@ -309,22 +329,22 @@ on loadScript(specifiedPath)
 			
 			set compiledScriptPath to compiledScriptParent & scriptId & ".scpt"
 			
-			log " Compiled script path is " & compiledScriptPath
+			Util's logMessage("Compiled script path is " & compiledScriptPath)
 			
 			-- Get information on possibly existing compiled script		
 			try
 				tell application "System Events"
 					set compiledModDate to modification date of file compiledScriptPath
 				end tell
-				log " Modification date of compiled script is " & compiledModDate
+				Util's logMessage("Modification date of compiled script is " & compiledModDate)
 			on error eMsg number eNum
-				log " Could not get modification date of compiled script. " & eMsg & " (" & (eNum as string) & ")"
+				Util's logMessage("Could not get modification date of compiled script. " & eMsg & " (" & (eNum as string) & ")")
 				set compiledModDate to false
 			end try
 			
 			if compiledModDate is false or scriptModDate > compiledModDate then
 				
-				log " Script changed or was never compiled "
+				Util's logMessage("Script changed or was never compiled")
 				
 				set compileCommand to "/usr/bin/osacompile -o " & Util's q(Util's pp(compiledScriptParent) & scriptId & ".scpt") & " " & Util's qpp(scriptPath)
 				
@@ -338,7 +358,7 @@ on loadScript(specifiedPath)
 			
 		else
 			
-			log " Compiled AppleScript specified "
+			Util's logMessage("Compiled AppleScript specified")
 			
 			set compiledScriptPath to scriptPath
 			
@@ -346,7 +366,7 @@ on loadScript(specifiedPath)
 		
 		-- Load the script			
 		try
-			log " Loading script from \"" & compiledScriptPath & "\" "
+			Util's logMessage("Loading script from \"" & compiledScriptPath & "\"")
 			set loadedScript to load script file compiledScriptPath
 		on error eMsg number eNum
 			error "Could not load script file at \"" & compiledScriptPath & "\". " & eMsg number eNum
@@ -355,9 +375,9 @@ on loadScript(specifiedPath)
 		-- Try to set script's own path property
 		try
 			set loadedScript's kScriptPath to scriptPath
-			log " Property kScriptPath set \"" & scriptPath & "\" in loaded script "
+			Util's logMessage("Property kScriptPath set \"" & scriptPath & "\" in loaded script")
 		on error eMsg number eNum
-			log " Script has no kScriptPath property "
+			Util's logMessage("Script has no kScriptPath property")
 		end try
 		
 		-- Try to initialize script
@@ -365,7 +385,7 @@ on loadScript(specifiedPath)
 			set initFunctionClass to class of loadedScript's initScript
 		on error eMsg number eNum
 			set initFunctionClass to missing value
-			log " Script has no initScript() function "
+			Util's logMessage("Script has no initScript() function")
 		end try
 		
 		if initFunctionClass is handler then
@@ -381,12 +401,12 @@ on loadScript(specifiedPath)
 			end try
 		end if
 		
-		
 		return loadedScript
 		
 	on error eMsg number eNum
 		
 		log " " & eMsg & " (" & (eNum as string) & ")"
+		
 		error "loadScript(" & specifiedPath & "): " & eMsg number eNum
 		
 	end try
