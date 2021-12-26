@@ -1,12 +1,10 @@
-(*
-	Filters the specified characters from a string.
-*)
-
 log filterString("†ber einem schšnen BŠchlein", "abcdefghijklmnopqrstuvwxyz_ 0123456789")
 
 on filterString(str, filterCharacters)
 	
 	try
+
+	(* Filters the specified characters from a string. *)
 		
 		if str is "" then
 			return ""
