@@ -19,6 +19,9 @@ log "=========================== Testing multiple filters"
 log filterList({"Alpha", "Bravo", "Charlie"}, {"!Alpha", "B*"})
 log filterList({"Alpha", "Bravo", "Charlie"}, {"*a*", "*ie"})
 
+log "=========================== Real world test"
+log filterList({"ldns-1.8.1.tar.gz.sha256", "ldns-1.8.1.tar.gz.sha1", "ldns-1.8.1.tar.gz.asc", "ldns-1.8.1.tar.gz"}, {"ldns-*.tar.gz", "!ldns-snap*"})
+
 on filterList(lst, filter)
 	
 	(* Filters a list by using the provided filter(s). *)
@@ -48,7 +51,7 @@ on filterList(lst, filter)
 			repeat with i from 1 to count of filter
 				
 				if buffer is {} then exit repeat
-				set buffer to filterList(lst, item i of filter)
+				set buffer to filterList(buffer, item i of filter)
 				
 			end repeat
 			
