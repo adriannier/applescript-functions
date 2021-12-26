@@ -1,10 +1,8 @@
-(*
-	Search for a pattern and replace it in a string. Pattern and replacement can be a list of multiple values.
-*)
-
 searchAndReplace("Wello world?", {"W", "w", "?"}, {"H", "W", "!"})
 
 on searchAndReplace(aText, aPattern, aReplacement)
+	
+	(*	Search for a pattern and replace it in a string. Pattern and replacement can be a list of multiple values. *)
 	
 	if (class of aPattern) is list and (class of aReplacement) is list then
 		
