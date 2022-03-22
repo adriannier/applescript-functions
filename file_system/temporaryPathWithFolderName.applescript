@@ -44,11 +44,13 @@ on temporaryPathWithFolderName(folderName)
 		end if
 		
 		tell application "System Events"
+		try
 			if (exists file tempPath) is false then
 				if (exists folder tempPath) is false then
 					exit repeat
 				end if
 			end if
+			end try
 		end tell
 		
 		set rNumber to rNumber + 1
