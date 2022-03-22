@@ -134,7 +134,6 @@ on convertTextToTitleCase(aText)
 		
 	end script
 	
-	
 	script TitleCaser
 		
 		property pInitialized : false
