@@ -1,12 +1,139 @@
-(*
-	Converts a text to title case.
-*)
-
 log convertTextToTitleCase("In episode iv: MAC MINI finally speed bumped.")
 
 log convertTextToTitleCase("DON'T EVEN TRIP, o.k.? (FEAT. AMON TOBIN)")
 
+log convertTextToTitleCase("LIL WAYNE")
+
 on convertTextToTitleCase(aText)
+	
+	(* Converts a text to title case. *)
+	
+	(* Implementation notice: Move the scripts RomanConverter and TitleCaser out of this function to improve performance when converting more than a few strings at a time. *)
+	
+	script RomanConverter
+		
+		(* Convert between integers and Roman numerals *)
+		
+		on isNumeral(input)
+			
+			try
+				toInteger(input)
+				return true
+			on error
+				return false
+			end try
+			
+		end isNumeral
+		
+		on toNumeral(input)
+			
+			if class of input is not integer then
+				error "RomanConverter: Invalid input type: " & ((class of input) as text) & "." number 1000
+			end if
+			
+			if input < 1 or input > 3999 then
+				error "RomanConverter: Invalid input: " & (input as text) & ". Only numbers from 1 to 3999 can be represented by Roman numerals." number 1001
+			end if
+			
+			set symbols to {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM", Â
+				"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC", Â
+				"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"}
+			
+			set roman to ""
+			set inputTxt to input as text
+			set inputPos to length of inputTxt
+			repeat with i from 2 to 0 by -1
+				
+				set inputSlice to (character inputPos of inputTxt) as integer
+				set symbolNumber to inputSlice + (i * 10) + 1
+				
+				try
+					set symbol to item symbolNumber of symbols
+				on error
+					set symbol to ""
+				end try
+				set roman to symbol & roman
+				
+				set inputPos to inputPos - 1
+				if inputPos is 0 then exit repeat
+				
+			end repeat
+			
+			try
+				set inputRemainder to (text 1 thru inputPos of inputTxt) as integer
+				repeat inputRemainder times
+					set roman to "M" & roman
+				end repeat
+			end try
+			
+			return roman
+			
+		end toNumeral
+		
+		on toInteger(input)
+			
+			if class of input is not text then
+				error "RomanConverter: Invalid input text: " & ((class of input) as text) & "." number 1000
+			end if
+			
+			set inputLen to count of input
+			set sum to 0
+			repeat with i from 1 to inputLen
+				
+				try
+					
+					set val to _charToInteger(item i of input)
+					
+					if (i + 1) ² inputLen and _charToInteger(item (i + 1) of input) > val then
+						set sum to sum - val
+					else
+						set sum to sum + val
+					end if
+					
+				on error eMsg number eNum
+					
+					if eNum is 1002 then
+						error "RomanConverter: Invalid Roman numeral: " & input number eNum
+					end if
+					
+					error eMsg number eNum
+					
+				end try
+				
+			end repeat
+			
+			if toNumeral(sum) is not input then
+				error "RomanConverter: Invalid input: " & input number 1003
+			end if
+			
+			return sum
+			
+		end toInteger
+		
+		on _charToInteger(char)
+			
+			if char is "M" then
+				return 1000
+			else if char is "D" then
+				return 500
+			else if char is "C" then
+				return 100
+			else if char is "L" then
+				return 50
+			else if char is "X" then
+				return 10
+			else if char is "V" then
+				return 5
+			else if char is "I" then
+				return 1
+			else
+				error "Invalid char" number 1002
+			end if
+			
+		end _charToInteger
+		
+	end script
+	
 	
 	script TitleCaser
 		
@@ -17,23 +144,23 @@ on convertTextToTitleCase(aText)
 		property pLowercaseCharacters : {}
 		property pUppercaseCharacters : {}
 		
-		property pWordsToKeepLowercase : {"a", "an", "and", "as", "at"} & Â¬
-			{"but", "by"} & Â¬
-			{"en"} & Â¬
-			{"featuring", "feat.", "feat", "for"} & Â¬
-			{"if", "in"} & Â¬
-			{"of", "on", "or"} & Â¬
-			{"the", "to"} & Â¬
+		property pWordsToKeepLowercase : {"a", "an", "and", "as", "at"} & Â
+			{"but", "by"} & Â
+			{"en"} & Â
+			{"featuring", "feat.", "feat", "for"} & Â
+			{"if", "in"} & Â
+			{"of", "on", "or"} & Â
+			{"the", "to"} & Â
 			{"v", "v.", "via", "vs", "vs."}
 		
-		property pSpecialPhrases : {"iPod touch", "Mac mini", "(featuring", "[featuring", "(feat.", "[feat.", "(feat", "[feat."}
+		property pSpecialPhrases : {"iPod touch", "Mac mini", "(featuring", "[featuring", "(feat.", "[feat.", "(feat", "[feat.", "(or: "}
 		
-		property pSpecialWords : {"iBook", "iDVD", "iLife", "iMac", "iMovie", "iPhone", "iPhoto", "iPod", "iWeb", "iWork", "eMac", "eMail", "AT&T", "Q&A"}
+		property pSpecialWords : {"iBook", "iDVD", "iLife", "iMac", "iMovie", "iPhone", "iPhoto", "iPod", "iWeb", "iWork", "eMac", "eMail", "AT&T", "Q&A", "DVD", "DVDs", "MTV"}
 		
-		property pWordAndPhraseAdditions : {"'s", "â€™s", "s'", "sâ€™", "s", "es"}
+		property pWordAndPhraseAdditions : {"'s", "Õs", "s'", "sÕ", "s", "es"}
 		
 		-- Define characters that require the next character to be upper case
-		property pCharsCausingUppercaseForNextChar : {"\"", "'", "â€œ", "â€˜", "(", "{", "[", "_"}
+		property pCharsCausingUppercaseForNextChar : {"\"", "'", "Ò", "Ô", "(", "{", "[", "_"}
 		
 		-- Define characters that are the last character of one word and require the next word to be upper case
 		property pLastCharsCausingUppercaseForNextWord : {":", ".", "?", "!"}
@@ -192,7 +319,7 @@ on convertTextToTitleCase(aText)
 					
 					set text item delimiters to prvDlmt
 					
-					if phraseNumber â‰  0 then
+					if phraseNumber ­ 0 then
 						set end of restoredItems to (item phraseNumber of pSpecialPhrases & theRemainder)
 					else
 						set end of restoredItems to (item i of tempList)
@@ -344,7 +471,7 @@ on convertTextToTitleCase(aText)
 				return false
 			end if
 			
-		end isEmailAddress:
+		end isEmailAddress
 		
 		on isProtocol(aText)
 			
@@ -354,7 +481,7 @@ on convertTextToTitleCase(aText)
 				return false
 			end if
 			
-		end isProtocol:
+		end isProtocol
 		
 		on isAbbreviation(aText)
 			
@@ -370,15 +497,9 @@ on convertTextToTitleCase(aText)
 		
 		on isRomanNumeral(aText)
 			
-			set romanNumeralSymbols to {"I", "V", "X", "L", "C", "D", "M"}
+			return RomanConverter's isNumeral(aText)
 			
-			repeat with i from 1 to count of characters of aText
-				if character i of aText is not in romanNumeralSymbols then return false
-			end repeat
-			
-			return true
-			
-		end isRomanNumeral:
+		end isRomanNumeral
 		
 		on replaceSpecialWord(aText)
 			
