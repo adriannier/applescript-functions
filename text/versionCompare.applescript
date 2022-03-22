@@ -2,7 +2,7 @@ if not versionCompare("1", "=", "1") then error "Test failed"
 
 if not versionCompare("1.0", "=", "1.0") then error "Test failed"
 
-if not versionCompare("1.1", "­", "1.0") then error "Test failed"
+if not versionCompare("1.1", "â‰ ", "1.0") then error "Test failed"
 
 if not versionCompare("1.1", "!=", "1.0") then error "Test failed"
 
@@ -10,19 +10,19 @@ if not versionCompare("1.1", ">", "1.0") then error "Test failed"
 
 if not versionCompare("1.0", "<", "1.9") then error "Test failed"
 
-if not versionCompare("1.0", "²", "1.9") then error "Test failed"
+if not versionCompare("1.0", "â‰¤", "1.9") then error "Test failed"
 
-if not versionCompare("1.9", "²", "1.9") then error "Test failed"
+if not versionCompare("1.9", "â‰¤", "1.9") then error "Test failed"
 
-if not versionCompare("1.9", "³", "1.9") then error "Test failed"
+if not versionCompare("1.9", "â‰¥", "1.9") then error "Test failed"
 
-if not versionCompare("1.9.1", "³", "1.9") then error "Test failed"
+if not versionCompare("1.9.1", "â‰¥", "1.9") then error "Test failed"
 
-if versionCompare("10.15.6", "³", "12.*") then error "Test failed"
+if versionCompare("10.15.6", "â‰¥", "12.*") then error "Test failed"
 
-if not versionCompare("12.2.1", "³", "12.*") then error "Test failed"
+if not versionCompare("12.2.1", "â‰¥", "12.*") then error "Test failed"
 
-if not versionCompare("13.1.1", "³", "12.*") then error "Test failed"
+if not versionCompare("13.1.1", "â‰¥", "12.*") then error "Test failed"
 
 if not versionCompare("1.0", "<=", "1.9") then error "Test failed"
 
@@ -111,12 +111,12 @@ on versionCompare(v1, comp, v2)
 						
 					end repeat
 					
-					if comp is "²" or comp is "<=" then
+					if comp is "â‰¤" or comp is "<=" then
 						return compResult = "<" or compResult = "="
-					else if comp is "³" or comp is ">=" then
+					else if comp is "â‰¥" or comp is ">=" then
 						return compResult = ">" or compResult = "="
-					else if comp is "­" or comp is "!=" then
-						return compResult ­ "="
+					else if comp is "â‰ " or comp is "!=" then
+						return compResult â‰  "="
 					else if comp is "==" then
 						return compResult = "="
 					else
