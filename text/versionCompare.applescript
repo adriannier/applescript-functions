@@ -38,6 +38,13 @@ if not versionCompare("12.2.1", ">=", "12.*") then error "Test failed"
 
 if not versionCompare("13.1.1", ">=", "12.*") then error "Test failed"
 
+try
+	versionCompare("v1.0", "<", "v2.0")
+	error "Test failed"
+on error eMsg number eNum
+	if eMsg is "Test failed" then error eMsg number eNum
+end try
+
 on versionCompare(v1, comp, v2)
 	
 	(* Compare two version strings. *)
@@ -61,7 +68,7 @@ on versionCompare(v1, comp, v2)
 					repeat with i from 1 to count of _components
 						
 						try
-							if item i of _components is not "x" and item i of _components is not "*" then
+							if item i of _components is not in {"x", "*"} then
 								set item i of _components to item i of _components as integer
 							end if
 						on error
@@ -92,12 +99,12 @@ on versionCompare(v1, comp, v2)
 						set this to component(i)
 						set other to otherVersion's component(i)
 						
-						if (this is "x" or this is "*") and (other is "x" or other is "*") then
+						if this is in {"x", "*"} and other is in {"x", "*"} then
 							set this to 0
 							set other to 0
-						else if (this is "x" or this is "*") then
+						else if this is in {"x", "*"} then
 							set this to other
-						else if (other is "x" or other is "*") then
+						else if other is in {"x", "*"} then
 							set other to this
 						end if
 						
@@ -133,7 +140,7 @@ on versionCompare(v1, comp, v2)
 						
 					on error
 						
-						if item -1 of _components is "x" or item -1 of _components is "*" then
+						if item -1 of _components is in {"x", "*"} then
 							return "x"
 						else
 							return 0
