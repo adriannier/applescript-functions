@@ -15,7 +15,7 @@ on loadScript(specifiedPath)
 	(* 
 	
 	loadScript("/path/to/script.applescript")
-	Version 4
+	Version 5
 	
 	Loads an AppleScript file compiling it first if necessary.
 	
@@ -40,6 +40,10 @@ on loadScript(specifiedPath)
 	Version history
 	===============
 
+	Version 4 - 2022-03-22
+		
+	- Added debug mode property to control logging (off by default)
+	
 	Version 4 - 2021-12-15
 	
 	- Improved logging
@@ -64,6 +68,8 @@ on loadScript(specifiedPath)
 	try
 		
 		script Util
+			
+			property pDebugMode : false
 			
 			on hfsPath(aPath)
 				
@@ -262,6 +268,9 @@ on loadScript(specifiedPath)
 			on logMessage(val)
 				
 				try
+					
+					if pDebugMode is false then return
+					
 					set val to val as text
 					
 					tell (current date) as «class isot» as string
