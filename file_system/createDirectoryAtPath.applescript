@@ -1,10 +1,11 @@
-(*
-	Creates a folder at the specified path (HFS-style or POSIX) with intermediate directories being created when necessary.
-*)
-
 createDirectoryAtPath("~/Desktop/Test/A/B/C/")
 
 on createDirectoryAtPath(dirPath)
+	
+	(*
+		Creates a folder at the specified path (HFS-style or POSIX)
+		with intermediate directories being created when necessary. 
+	*)
 	
 	try
 		
