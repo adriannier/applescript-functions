@@ -1,4 +1,4 @@
-log filterString("Über einem schönen Bächlein", "abcdefghijklmnopqrstuvwxyz_ 0123456789")
+log filterString("√úber einem sch√∂nen B√§chlein", "abcdefghijklmnopqrstuvwxyz_ 0123456789")
 
 on filterString(str, filterCharacters)
 	
