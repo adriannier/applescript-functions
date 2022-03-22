@@ -26,17 +26,25 @@ on filterList(lst, filter)
 	
 	(* Filters a list by using the provided filter(s). *)
 	
-	-- Valid filter strings:
-	-- "pattern": is pattern
-	-- "*pattern*": contains pattern
-	-- "pattern*": starts with pattern
-	-- "*pattern": ends with pattern
-	-- "pattern1*pattern2": starts with pattern 1 and ends with pattern 2
-	-- "*pattern1*pattern2*": contains pattern 1 and pattern 2, pattern 2 must follow pattern 1
+	(* Valid filter strings:
 	
-	-- Negate filter string by prefixing with !: "!*pattern"
-	-- Escape regular asterisks using backslash: \\*
-	-- Filter can be a list of multiple filter strings
+	"pattern": is pattern
+	
+	"*pattern*": contains pattern
+	
+	"pattern*": starts with pattern
+	
+	"*pattern": ends with pattern
+	
+	"pattern1*pattern2": starts with pattern 1 and ends with pattern 2
+	
+	"*pattern1*pattern2*": contains pattern 1 and pattern 2, pattern 2 must follow pattern 1
+	
+	¥ Negate filter string by prefixing with !: "!*pattern"
+	¥ Escape regular asterisks using backslash: \\*
+	¥ Filter can be a list of multiple filter strings
+	
+	*)
 	
 	try
 		

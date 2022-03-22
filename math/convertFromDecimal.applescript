@@ -1,7 +1,3 @@
-(*
-	Converts a decimal number to the specified base.
-*)
-
 log convertFromDecimal(127, 2) -- Binary
 
 log convertFromDecimal(255, 16) -- Hex
@@ -11,6 +7,8 @@ log convertFromDecimal(18, 8) -- Octal
 log convertFromDecimal(1024, 36) -- Highest possible base
 
 on convertFromDecimal(aValue, targetBase)
+
+(* Converts a decimal number to the specified base. *)
 	
 	if targetBase > 36 then error "Invalid target base." number 1
 	

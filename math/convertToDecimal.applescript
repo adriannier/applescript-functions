@@ -1,11 +1,8 @@
-(*
-Convert a number in a different base to decimal.
-*)
-
 log convertToDecimal("FF", 16) -- Hexadecimal
 
-
 on convertToDecimal(aValue, baseOfValue)
+
+(* Convert a number in a different base to decimal. *)
 
 set valueComponents to characters of (aValue as string)
 set valueComponents to reverse of valueComponents
@@ -18,7 +15,7 @@ repeat with i from 1 to count of valueComponents
 	
 	set charNumber to ASCII number char
 	
-	if charNumber â‰¥ 65 and charNumber â‰¤ 90 then
+	if charNumber ³ 65 and charNumber ² 90 then
 		set v to charNumber - 55
 	else
 		set v to char as integer

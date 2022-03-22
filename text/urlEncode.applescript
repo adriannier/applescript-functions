@@ -1,8 +1,8 @@
-(* Encode characters so that they can be part of a URL *)
-
 urlEncode("https://www.apple.com/de/search/iMac?src=globalnav")
 
 on urlEncode(str)
+
+(* Encode characters so that they can be part of a URL *)
 	
 	set str to str as text
 	set buffer to ""

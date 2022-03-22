@@ -2,9 +2,9 @@ log filterString("†ber einem schšnen BŠchlein", "abcdefghijklmnopqrstuvwxyz_ 012
 
 on filterString(str, filterCharacters)
 	
-	try
-
 	(* Filters the specified characters from a string. *)
+	
+	try
 		
 		if str is "" then
 			return ""

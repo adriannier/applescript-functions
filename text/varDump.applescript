@@ -1,12 +1,8 @@
-(*
-	Returns the textual representation of a variable.
-*)
-
 log varDump({1, 2, 3})
 
 log varDump({a:1, b:1, c:1})
 
-log varDump(date "Wednesday, October 21, 2015 at 12:00:00 AM")
+log varDump(current date)
 
 log varDump(path to home folder)
 
@@ -15,6 +11,8 @@ log varDump(0.3)
 log varDump(true)
 
 on varDump(var)
+
+(* Returns the textual representation of a variable. *)
 	
 	try
 		

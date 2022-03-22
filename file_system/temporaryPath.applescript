@@ -1,10 +1,8 @@
-(*
-	Generates a unique path for a file in the current user's temporary items folder.
-*)
-	
 temporaryPath()
 
 on temporaryPath()
+
+	(* Generates a unique path for a file in the current user's temporary items folder. *)
 	
 	-- Generate pseudorandom numbers
 	set rand1 to (round (random number from 100 to 999)) as text
