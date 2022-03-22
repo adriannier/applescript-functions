@@ -1,12 +1,10 @@
-(*
-	Converts a number to text
-*)
-
 log formatNumber(10, 2)
 
 log formatNumber(1.234, 1)
 
 on formatNumber(n, p)
+	
+	(* Converts a number to text. *)
 	
 	set n to round (n * (10 ^ p))
 	set t to n / (10 ^ p) as text
@@ -28,10 +26,8 @@ on formatNumber(n, p)
 	
 	
 	repeat missingZeroes times
-		
 		set t to t & "0"
 	end repeat
-	
 	
 	return t
 	

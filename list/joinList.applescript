@@ -1,12 +1,10 @@
-(*
-	Joins a list using the specified delimiter
-*)
-
 log joinList({1, 2, 3, 4, 5}, ASCII character 10)
 
 log joinList({1, 2, 3, 4, 5}, false)
 
 on joinList(aList, aDelimiter)
+
+	(* Joins a list using the specified delimiter *)
 	
 	if aDelimiter is false then set aDelimiter to ""
 	
