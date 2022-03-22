@@ -2,25 +2,41 @@ if not versionCompare("1", "=", "1") then error "Test failed"
 
 if not versionCompare("1.0", "=", "1.0") then error "Test failed"
 
-if not versionCompare("1.1", "â‰ ", "1.0") then error "Test failed"
+if not versionCompare("1.1", "­", "1.0") then error "Test failed"
+
+if not versionCompare("1.1", "!=", "1.0") then error "Test failed"
 
 if not versionCompare("1.1", ">", "1.0") then error "Test failed"
 
 if not versionCompare("1.0", "<", "1.9") then error "Test failed"
 
-if not versionCompare("1.0", "â‰¤", "1.9") then error "Test failed"
+if not versionCompare("1.0", "²", "1.9") then error "Test failed"
 
-if not versionCompare("1.9", "â‰¤", "1.9") then error "Test failed"
+if not versionCompare("1.9", "²", "1.9") then error "Test failed"
 
-if not versionCompare("1.9", "â‰¥", "1.9") then error "Test failed"
+if not versionCompare("1.9", "³", "1.9") then error "Test failed"
 
-if not versionCompare("1.9.1", "â‰¥", "1.9") then error "Test failed"
+if not versionCompare("1.9.1", "³", "1.9") then error "Test failed"
 
-if versionCompare("10.15.6", "â‰¥", "12.*") then error "Test failed"
+if versionCompare("10.15.6", "³", "12.*") then error "Test failed"
 
-if not versionCompare("12.2.1", "â‰¥", "12.*") then error "Test failed"
+if not versionCompare("12.2.1", "³", "12.*") then error "Test failed"
 
-if not versionCompare("13.1.1", "â‰¥", "12.*") then error "Test failed"
+if not versionCompare("13.1.1", "³", "12.*") then error "Test failed"
+
+if not versionCompare("1.0", "<=", "1.9") then error "Test failed"
+
+if not versionCompare("1.9", "<=", "1.9") then error "Test failed"
+
+if not versionCompare("1.9", ">=", "1.9") then error "Test failed"
+
+if not versionCompare("1.9.1", ">=", "1.9") then error "Test failed"
+
+if versionCompare("10.15.6", ">=", "12.*") then error "Test failed"
+
+if not versionCompare("12.2.1", ">=", "12.*") then error "Test failed"
+
+if not versionCompare("13.1.1", ">=", "12.*") then error "Test failed"
 
 on versionCompare(v1, comp, v2)
 	
@@ -95,12 +111,12 @@ on versionCompare(v1, comp, v2)
 						
 					end repeat
 					
-					if comp is "â‰¤" or comp is "<=" then
+					if comp is "²" or comp is "<=" then
 						return compResult = "<" or compResult = "="
-					else if comp is "â‰¥" or comp is ">=" then
+					else if comp is "³" or comp is ">=" then
 						return compResult = ">" or compResult = "="
-					else if comp is "â‰ " or comp is "!=" then
-						return compResult â‰  "="
+					else if comp is "­" or comp is "!=" then
+						return compResult ­ "="
 					else if comp is "==" then
 						return compResult = "="
 					else
@@ -110,13 +126,13 @@ on versionCompare(v1, comp, v2)
 				end compare
 				
 				on component(n)
-				
-					try
 					
+					try
+						
 						return item n of _components
 						
 					on error
-					
+						
 						if item -1 of _components is "x" or item -1 of _components is "*" then
 							return "x"
 						else
@@ -128,7 +144,7 @@ on versionCompare(v1, comp, v2)
 				end component
 				
 				on componentCount()
-				
+					
 					return count of _components
 					
 				end componentCount
