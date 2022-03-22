@@ -1,5 +1,7 @@
 searchAndReplace("Wello world?", {"W", "w", "?"}, {"H", "W", "!"})
 
+searchAndReplace("A valid file/directory name contains no :", {":", "/", "\\"}, {"-", "-", "-"})
+
 on searchAndReplace(aText, aPattern, aReplacement)
 	
 	(*	Search for a pattern and replace it in a string. Pattern and replacement can be a list of multiple values. *)
