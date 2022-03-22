@@ -1,35 +1,68 @@
-(*
-	Removes surrounding white space from a text.
-*)
+if trim("Hello World!") is not "Hello World!" then
+	error "Test 1 failed"
+end if
 
-log trim("Hello World!")
+if trim("   Hello World!     ") is not "Hello World!" then
+	error "Test 2 failed"
+end if
 
-log trim("   Hello World!     ")
+set ws to (ASCII character 8) & (ASCII character 9) & (ASCII character 10) & (ASCII character 9) & (ASCII character 13) & return
 
-set ws to (ASCII character 9) & (ASCII character 10) & (ASCII character 9)
+if trim("Hello World!" & ws) is not "Hello World!" then
+	error "Test 3 failed"
+end if
 
-log trim("Hello World!" & ws)
+if trim(ws & "Hello World!") is not "Hello World!" then
+	error "Test 4 failed"
+end if
 
-log trim(ws & "Hello World!")
+if trim(ws & "Hello World!" & ws) is not "Hello World!" then
+	error "Test 5 failed"
+end if
 
-log trim(ws & "Hello World!" & ws)
+if trim("H                      ") is not "H" then
+	error "Test 6 failed"
+end if
 
-log trim("H                      ")
+if trim("                      W") is not "W" then
+	error "Test 7 failed"
+end if
 
-log trim("                      W")
+if trim("") is not "" then
+	error "Test 8 failed"
+end if
 
-log trim("")
-log trim(" ")
-log trim("	")
+if trim(" ") is not "" then
+	error "Test 9 failed"
+end if
 
-log trim("x ")
-log trim("x	")
-log trim(" x")
-log trim("	x")
+if trim("  ") is not "" then
+	error "Test 10 failed"
+end if
+
+if trim("x") is not "x" then
+	error "Test 11 failed"
+end if
+
+if trim("x ") is not "x" then
+	error "Test 12 failed"
+end if
+
+if trim("x  ") is not "x" then
+	error "Test 13 failed"
+end if
+
+if trim(" x") is not "x" then
+	error "Test 14 failed"
+end if
+
+if trim("  x") is not "x" then
+	error "Test 15 failed"
+end if
 
 on trim(aText)
 	
-	(* Strips a text of its surrounding white space. *)
+	(* Removes surrounding white space from a text. *)
 	
 	try
 		
