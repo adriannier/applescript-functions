@@ -78,7 +78,7 @@ on loadScript(loadingOptions)
 		
 		script Util
 			
-			property pDebugMode : true
+			property pDebugMode : false
 			
 			on q(str)
 				
