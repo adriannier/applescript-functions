@@ -1,6 +1,6 @@
 on run
 	
-	set dictLibrary to loadScript({scriptPath:"~/Library/Scripts/Libraries/Dictionary.applescript", scriptURL:"https://raw.githubusercontent.com/adriannier/applescript-dictionary/release/Dictionary.applescript"})
+	set dictLibrary to loadScript({scriptPath:"~/Library/Scripts/Libraries/adriannier/applescript-dictionary.applescript", scriptURL:"https://raw.githubusercontent.com/adriannier/applescript-dictionary/release/Dictionary.applescript"})
 	
 	set dict to dictLibrary's newDictionary()
 	
