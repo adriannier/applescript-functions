@@ -1,6 +1,6 @@
 on run
 	
-	set dictLibrary to loadScript("~/Projects/applescript-dictionary/Dictionary.applescript")
+	set dictLibrary to loadScript({scriptPath:"~/Library/Scripts/Libraries/Dictionary.applescript", scriptURL:"https://raw.githubusercontent.com/adriannier/applescript-dictionary/release/Dictionary.applescript"})
 	
 	set dict to dictLibrary's newDictionary()
 	
@@ -10,12 +10,17 @@ on run
 	
 end run
 
-on loadScript(specifiedPath)
+on loadScript(loadingOptions)
 	
 	(* 
 	
+	Version 6
+	
+	Example 1 - Loading a local script:
 	loadScript("/path/to/script.applescript")
-	Version 5
+	
+	Example 2 - Loading a local script with an online fallback:
+	loadScript({scriptPath:"/path/to/script.applescript", scriptURL:"https://domain.com/path/to/script.applescript"})
 	
 	Loads an AppleScript file compiling it first if necessary.
 	
@@ -40,7 +45,11 @@ on loadScript(specifiedPath)
 	Version history
 	===============
 
-	Version 4 - 2022-03-22
+	Version 6 - 2023-05-06
+	
+	- Scripts can now be optionally downloaded
+
+	Version 5 - 2022-03-22
 		
 	- Added debug mode property to control logging (off by default)
 	
@@ -69,108 +78,7 @@ on loadScript(specifiedPath)
 		
 		script Util
 			
-			property pDebugMode : false
-			
-			on hfsPath(aPath)
-				
-				logMessage("Converting path \"" & aPath & "\" to HFS")
-				
-				set aPath to pathToString(aPath)
-				set aPath to unwrap(aPath, "'")
-				
-				if aPath does not contain "/" and aPath does not contain ":" then
-					-- Only filename specified; treat as path relative to current directory
-					set aPath to "./" & aPath
-					logMessage("Converted file name specification to " & aPath)
-				end if
-				
-				-- Get the path to this script
-				try
-					set myPath to pp(kScriptPath)
-				on error
-					set myPath to pp(path to me)
-				end try
-				
-				logMessage("Own path is " & myPath)
-				
-				-- Get path to parent directory
-				set myPathComponents to explode(myPath, "/")
-				set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
-				
-				logMessage("Parent path is " & myParentDirectoryPath)
-				
-				if aPath does not contain ":" then
-					
-					if aPath starts with "~" then
-						
-						(* Expand tilde *)
-						
-						-- Get the path to the user’s home folder
-						tell application "System Events" to set userPath to Util's pp(path to home folder as text)
-						
-						-- Remove trailing slash
-						if userPath ends with "/" then
-							tell application "System Events"
-								set userPath to text 1 thru -2 of userPath
-							end tell
-						end if
-						
-						logMessage("Found user’s home folder at " & userPath)
-						
-						if aPath is "~" then
-							-- Simply use home folder path
-							set aPath to userPath
-						else
-							-- Concatenate paths
-							tell application "System Events"
-								set aPath to userPath & (text 2 thru -1 of aPath)
-							end tell
-						end if
-						
-						logMessage("Expanded tilde to " & aPath)
-						
-					else if aPath starts with "./" then
-						
-						(* Convert current directory reference *)
-						
-						tell application "System Events"
-							set aPath to myParentDirectoryPath & text 3 thru -1 of aPath
-						end tell
-						
-						logMessage("Converted reference to current directory to " & aPath)
-						
-					else if aPath starts with "../" then
-						
-						-- Convert reference to parent directories to absolute path
-						
-						tell Util
-							set pathComponents to explode(aPath, "../")
-							set parentDirectoryCount to (count of pathComponents)
-							set parentDirectoryPath to implode((items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "", "/")
-						end tell
-						
-						set aPath to parentDirectoryPath & item -1 of pathComponents
-						
-						logMessage("Converted relative path to " & aPath)
-						
-					else
-						
-						logMessage("Normalized path to " & aPath)
-						
-					end if
-					
-					-- Turn POSIX path to HFS path
-					tell application "System Events"
-						set aPath to POSIX file aPath as text
-					end tell
-					
-				end if
-				
-				logMessage("Converted path to " & aPath)
-				
-				return aPath
-				
-			end hfsPath
+			property pDebugMode : true
 			
 			on q(str)
 				
@@ -284,20 +192,201 @@ on loadScript(specifiedPath)
 				
 			end logMessage
 			
+			on hfsPath(aPath)
+				
+				-- logMessage("Converting path \"" & aPath & "\" to HFS")
+				
+				set originalPath to aPath as text
+				
+				set aPath to pathToString(aPath)
+				set aPath to unwrap(aPath, "'")
+				
+				if aPath does not contain "/" and aPath does not contain ":" then
+					-- Only filename specified; treat as path relative to current directory
+					set aPath to "./" & aPath
+					logMessage("Converted file name specification to " & aPath)
+				end if
+				
+				-- Get the path to this script
+				try
+					set myPath to pp(kScriptPath)
+				on error
+					set myPath to pp(path to me)
+				end try
+				
+				-- logMessage("Own path is " & myPath)
+				
+				-- Get path to parent directory
+				set myPathComponents to explode(myPath, "/")
+				set myParentDirectoryPath to implode(items 1 thru -2 of myPathComponents & "", "/")
+				
+				-- logMessage("Parent path is " & myParentDirectoryPath)
+				
+				if aPath does not contain ":" then
+					
+					if aPath starts with "~" then
+						
+						(* Expand tilde *)
+						
+						-- Get the path to the user’s home folder
+						tell application "System Events" to set userPath to Util's pp(path to home folder as text)
+						
+						-- Remove trailing slash
+						if userPath ends with "/" then
+							tell application "System Events"
+								set userPath to text 1 thru -2 of userPath
+							end tell
+						end if
+						
+						-- logMessage("Found user’s home folder at " & userPath)
+						
+						if aPath is "~" then
+							-- Simply use home folder path
+							set aPath to userPath
+						else
+							-- Concatenate paths
+							tell application "System Events"
+								set aPath to userPath & (text 2 thru -1 of aPath)
+							end tell
+						end if
+						
+						-- logMessage("Expanded tilde to " & aPath)
+						
+					else if aPath starts with "./" then
+						
+						(* Convert current directory reference *)
+						
+						tell application "System Events"
+							set aPath to myParentDirectoryPath & text 3 thru -1 of aPath
+						end tell
+						
+						-- logMessage("Converted reference to current directory to " & aPath)
+						
+					else if aPath starts with "../" then
+						
+						-- Convert reference to parent directories to absolute path
+						
+						tell Util
+							set pathComponents to explode(aPath, "../")
+							set parentDirectoryCount to (count of pathComponents)
+							set parentDirectoryPath to implode((items 1 thru ((count of items of myPathComponents) - parentDirectoryCount) of myPathComponents) & "", "/")
+						end tell
+						
+						set aPath to parentDirectoryPath & item -1 of pathComponents
+						
+						-- logMessage("Converted relative path to " & aPath)
+						
+					else
+						
+						-- logMessage("Normalized path to " & aPath)
+						
+					end if
+					
+					-- Turn POSIX path to HFS path
+					tell application "System Events"
+						set aPath to POSIX file aPath as text
+					end tell
+					
+				end if
+				
+				if originalPath is not aPath then
+					logMessage("Converted " & originalPath & " to " & aPath)
+				end if
+				
+				return aPath
+				
+			end hfsPath
+			
+			on hfsPathForParent(anyPath)
+				
+				set anyPath to hfsPath(anyPath)
+				
+				-- For simplification make sure every path ends with a colon
+				if anyPath does not end with ":" then set anyPath to anyPath & ":"
+				
+				-- Get rid of the last path component
+				set prvDlmt to text item delimiters
+				set text item delimiters to ":"
+				set parentPath to (text items 1 thru -3 of anyPath as text) & ":"
+				set text item delimiters to prvDlmt
+				
+				return parentPath
+				
+			end hfsPathForParent
+			
+			on downloadFile(remoteURL, localPath)
+				
+				(* Downloads a file from the specified URL to the local path. *)
+				
+				set localPath to hfsPath(localPath)
+				
+				set localParentPath to hfsPathForParent(localPath)
+				
+				-- Add cache buster to URL
+				set cacheBuster to random number from 1 to 99999999
+				set cacheBustingURL to remoteURL & "?cacheBuster" & (cacheBuster as text) & "=" & (cacheBuster as text)
+				
+				try
+					
+					set userAgent to "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15"
+					do shell script "mkdir -p " & quoted form of POSIX path of localParentPath & " && curl --ssl-reqd --fail --no-progress-meter --connect-timeout 20 --retry 3 --retry-max-time 30 --location --user-agent " & quoted form of userAgent & " " & quoted form of cacheBustingURL & " -o " & quoted form of (POSIX path of localPath)
+					
+				on error eMsg number eNum
+					
+					error "downloadFile(): There was an error downloading " & remoteURL & " to " & localPath & ": " & eMsg number eNum
+					
+				end try
+				
+				return localPath
+				
+			end downloadFile
+			
 		end script -- Util
+		
+		-- Check what class the loading options are
+		if class of loadingOptions is record then
+			set specifiedPath to scriptPath of loadingOptions
+			set scriptURL to scriptURL of loadingOptions
+		else
+			set specifiedPath to loadingOptions as text
+			set scriptURL to false
+		end if
 		
 		-- Convert path to text
 		tell Util to set scriptPath to hfsPath(specifiedPath)
 		
-		-- Get information on existing script file
-		try
-			tell application "System Events"
-				set scriptModDate to modification date of file scriptPath
-				set scriptName to name of file scriptPath
-			end tell
-		on error
-			error "Could not find script file at \"" & scriptPath & "\""
-		end try
+		
+		repeat with searchAttempt from 1 to 2
+			
+			-- Get information on existing script file
+			try
+				
+				tell application "System Events"
+					set scriptModDate to modification date of file scriptPath
+					set scriptName to name of file scriptPath
+				end tell
+				
+				exit repeat
+				
+			on error
+				
+				if scriptURL is false or searchAttempt is 2 then
+					
+					error "Could not find script file at \"" & scriptPath & "\""
+					
+				else
+					
+					Util's logMessage("Script not found locally. Trying to download from " & scriptURL)
+					
+					-- Try to download script
+					Util's downloadFile(scriptURL, specifiedPath)
+					
+				end if
+				
+			end try
+			
+		end repeat
+		
 		
 		if scriptPath ends with ".applescript" then
 			
@@ -306,7 +395,8 @@ on loadScript(specifiedPath)
 			-- Plain text version of script; look for compiled version
 			
 			-- Turn script path into a string we can use for identification
-			tell Util to set scriptId to implode(explode(scriptPath, {":", " ", "/"}), "_")
+			tell Util to set scriptId to implode(explode(scriptPath, {":", " ", "/", "."}), "_")
+			
 			-- Remove the .applescript suffix from the id
 			tell application "System Events" to set scriptId to text 1 thru -13 of scriptId
 			
@@ -416,7 +506,7 @@ on loadScript(specifiedPath)
 		
 		log " " & eMsg & " (" & (eNum as string) & ")"
 		
-		error "loadScript(" & specifiedPath & "): " & eMsg number eNum
+		error "loadScript(): " & eMsg number eNum
 		
 	end try
 	
