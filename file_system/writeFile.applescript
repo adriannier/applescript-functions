@@ -231,8 +231,6 @@ on writeFile(content, filePath, options)
 				
 			end if
 			
-			log writeData
-			
 			write writeData to file tempPath starting at fileEnd as overrideType
 			
 		on error errorMessage number errorNumber
